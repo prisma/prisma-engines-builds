@@ -1,4 +1,4 @@
-name: Build Linux
+name: Build Engines
 on:
   workflow_dispatch:
     inputs:
@@ -8,7 +8,7 @@ on:
   pull_request:
 
 jobs:
-  build:
+  build-linux:
     name: "${{ matrix.target.name }} (on branch ${{ github.event.ref }} for commit ${{ github.event.inputs.commit }})"
     # env:
     #   # default build config
