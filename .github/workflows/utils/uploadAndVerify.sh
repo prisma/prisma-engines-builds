@@ -18,6 +18,24 @@ echo "Verifing downloaded files..."
 
 ls -R .
 
+FILECOUNT_FOR_SHA256=$(find . -type f -name "*.sha256" | wc -l)
+if [ "$FILECOUNT_FOR_SHA256" -eq 0 ]; then
+    echo "::error::No .sha256 files found."
+    exit 1
+fi
+
+FILECOUNT_FOR_GZ=$(find . -type f -name "*.gz" | wc -l)
+if [ "$FILECOUNT_FOR_GZ" -eq 0 ]; then
+    echo "::error::No .gz files found."
+    exit 1
+fi
+
+FILECOUNT_FOR_SIG=$(find . -type f -name "*.sig" | wc -l)
+if [ "$FILECOUNT_FOR_SIG" -eq 0 ]; then
+    echo "::error::No .sig files found."
+    exit 1
+fi
+
 # Unpack all .gz files first
 find . -type f -name "*.gz" -exec sh -c '
     
