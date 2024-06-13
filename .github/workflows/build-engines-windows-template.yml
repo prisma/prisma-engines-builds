@@ -42,11 +42,17 @@ jobs:
 
       - run: cargo build --release
 
+      - name: Rename files
+        working-directory: ${{ github.workspace }}/target/release/
+        run: |
+          mv query_engine.dll query_engine.dll.node
+          mv query-engine.exe query-engine.exe
+
       - uses: actions/upload-artifact@v4
         with:
           name: windows
           path: |
             ${{ github.workspace }}/target/release/prisma-fmt.exe
             ${{ github.workspace }}/target/release/schema-engine.exe
-            ${{ github.workspace }}/target/release/query_engine.exe
-            ${{ github.workspace }}/target/release/query_engine.dll
+            ${{ github.workspace }}/target/release/query-engine.exe
+            ${{ github.workspace }}/target/release/query_engine.dll.node

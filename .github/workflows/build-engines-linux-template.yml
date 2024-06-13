@@ -39,7 +39,7 @@ jobs:
             target_path: ''
             features_string: ''
           # Linux Musl
-          - name: 'linux-musl-openssl-1.1.x'
+          - name: 'linux-musl'
             image: 'prismagraphql/build:alpine-libssl1.1.x'
             target_string: ''
             target_path: ''
@@ -173,6 +173,12 @@ jobs:
       - name: Execute Build command
         run: ${{ steps.construct_build_command.outputs.command }}
 
+      - name: Rename files
+        if: ${{ matrix.target.target_path == '' }}
+        working-directory: ${{ github.workspace }}/target/release/
+        run: |
+          mv libquery_engine.dylib libquery_engine.dylib.node
+
       # Upload for target "release"
       - uses: actions/upload-artifact@v4
         if: ${{ matrix.target.target_path == '' }}
@@ -183,6 +189,12 @@ jobs:
             ${{ github.workspace }}/target/release/schema-engine
             ${{ github.workspace }}/target/release/query-engine
             ${{ github.workspace }}/target/release/prisma-fmt
+
+      - name: Rename files
+        if: ${{ matrix.target.target_path != '' }}
+        working-directory: ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release
+        run: |
+          mv libquery_engine.dylib libquery_engine.dylib.node
 
       # Upload for target from matrix
       - uses: actions/upload-artifact@v4
