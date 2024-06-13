@@ -29,6 +29,8 @@ jobs:
           repository: prisma/prisma-engines
           ref: ${{ inputs.commit }}
 
+      - uses: dtolnay/rust-toolchain@stable
+
       - uses: actions/cache@v4
         with:
           path: |
@@ -39,8 +41,6 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
-
-      - uses: dtolnay/rust-toolchain@stable
 
       - run: |
           cargo build --release -p query-engine -p query-engine-node-api -p schema-engine-cli -p prisma-fmt
