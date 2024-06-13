@@ -106,6 +106,14 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -Rl engines-artifacts
 
+      # TODO in a next major version of Prisma: remove this, and replace both `Debian` and `Rhel` with a single `LinuxGlibc`/`LinuxGnu` option.
+      - name: Duplicate engines for debian
+        working-directory: engines-artifacts
+        run: |
+          cp -r rhel-openssl-1.0.x debian-openssl-1.0.x
+          cp -r rhel-openssl-1.1.x debian-openssl-1.1.x
+          cp -r rhel-openssl-3.0.x debian-openssl-3.0.x
+
       - name: 'Create compressed engine files (.gz)'
         working-directory: engines-artifacts
         run: |

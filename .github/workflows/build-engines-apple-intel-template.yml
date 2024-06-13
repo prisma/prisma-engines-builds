@@ -47,7 +47,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: macos-intel
+          name: darwin
           path: |
             ${{ github.workspace }}/target/release/schema-engine
             ${{ github.workspace }}/target/release/prisma-fmt
