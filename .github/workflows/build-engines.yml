@@ -214,8 +214,9 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: engines-artifacts
-          # https://github.com/prisma/prisma-engines-builds/actions/runs/9497661416
-          run-id: 9497661416
+          # https://github.com/prisma/prisma-engines-builds/actions/runs/9500624695/artifacts/1598243732
+          run-id: 9500624695
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'R2: Check if artifacts were already built and uploaded before via `.finished` file'
         env:
