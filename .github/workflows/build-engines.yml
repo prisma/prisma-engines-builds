@@ -214,6 +214,25 @@ jobs:
         with:
           path: engines-artifacts
 
+      - name: Check if .finished file marker exists
+        run:
+
+      - name: 'Check if artifacts were already built and uploaded before via `.finished` file'
+        env:
+          FILE_PATH: 'all_commits/${{ github.event.inputs.commit }}/.finished'
+
+        run: |
+          set -eux
+
+          object_exists=$(aws s3api head-object --bucket $BUCKET_NAME --key $FILE_PATH --debug || true)
+          if [ -z "$object_exists" ]; then
+            echo ".finished file marker was NOT found. Continuing..."
+          else
+            echo "it exists"
+            echo ".finished file marker was found for $TARGET at $URL - This means that artifacts were already uploaded in a previous run. Aborting to avoid overwriting the artifacts.",
+            exit 1
+          fi;
+
       - name: Display structure of downloaded files
         run: ls -R engines-artifacts
 
@@ -274,6 +293,8 @@ jobs:
 
           ls -R .
 
+      # TODO: currently, we upload a .finished file to each target dir
+      # We can use a global .finished with this new setup?
       - name: 'TODO: Upload .finished marker file'
         run: |
           echo "Upload .finished marker file"
