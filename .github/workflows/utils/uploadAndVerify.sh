@@ -58,9 +58,8 @@ find . -type f -exec sh -c '
     if [[ $1 == *.sha256 ]]; then
         echo "Validating sha256 sum."
         sha256sum -c "$1"
-    fi
-    
-    if [[ $1 == *.sig ]]; then
+
+    elif [[ $1 == *.sig ]]; then
         # Remove .sig from the file name
         fileToVerify=$(echo $1 | rev | cut -c5- | rev)
 
