@@ -39,7 +39,7 @@ jobs:
       commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 
   build-windows:
-    name: Build Engines for React native
+    name: Build Engines for Windows
     uses: ./.github/workflows/build-engines-windows-template.yml
     with:
       # commit: ${{ inputs.commit }}
