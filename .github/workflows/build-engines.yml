@@ -155,7 +155,7 @@ jobs:
           TARGET_STRING: ${{ matrix.target.target_string }}
           FEATURES_STRING: ${{ matrix.target.features_string }}
         run: |
-          touch target/release/libquery_engine.dylib && touch target/release/schema-engine && touch target/release/query-engine && touch target/release/prisma-fmt
+          mkdir -r target/release && touch target/release/libquery_engine.dylib && touch target/release/schema-engine && touch target/release/query-engine && touch target/release/prisma-fmt
 
       - name: Show Build Command
         env:
