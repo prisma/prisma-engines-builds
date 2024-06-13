@@ -220,17 +220,21 @@ jobs:
       - name: 'TODO: Compressing engine files'
         working-directory: engines-artifacts
         run: |
-          for file in $(find . -type f); do
-            gzip -c "$file" > "$file.gz"
-          done
+          find . -type f -exec sh -c '
+            gzip -c "1%" > "$1.gz"
+            echo "$1.gz"
+          ' sh {} \;
 
           ls -R .
 
       - name: 'TODO: Creates a SHA256 sum file (.sha256) next to each file.'
         run: |
-          for file in $(find . -type f); do
-            sha256sum "$file" > "$file.sha256" 
-          done
+          find . -type f -exec sh -c '
+            sha256sum "1%" > "$1.sha256" 
+            echo "$1.sha256"
+          ' sh {} \;
+
+          ls -R .
 
       # https://github.com/crazy-max/ghaction-import-gpg
       - name: Import GPG key
