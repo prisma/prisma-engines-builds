@@ -251,7 +251,7 @@ jobs:
           set -eu
 
           find . -type f | while read filename; do
-            gzip -c "$filename" > "{}.gz"
+            gzip -c "$filename" > "$filename.gz"
             echo "$filename.gz file created."
           done
 

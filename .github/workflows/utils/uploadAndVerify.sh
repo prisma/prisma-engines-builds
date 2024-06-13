@@ -64,8 +64,6 @@ find . -type f | while read filename; do
         echo "Validating signature $filename for $fileToVerify"
         gpg --verify "$filename" "$fileToVerify"
     fi
-
-    something wrong
 done
 
 echo "Upload .finished marker file"
