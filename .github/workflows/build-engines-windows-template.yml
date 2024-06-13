@@ -46,5 +46,7 @@ jobs:
         with:
           name: windows
           path: |
-            ${{ github.workspace }}/target/release/*.exe
-            ${{ github.workspace }}/target/release/*.dll
+            ${{ github.workspace }}/target/release/prisma-fmt.exe
+            ${{ github.workspace }}/target/release/schema-engine.exe
+            ${{ github.workspace }}/target/release/query_engine.exe
+            ${{ github.workspace }}/target/release/query_engine.dll

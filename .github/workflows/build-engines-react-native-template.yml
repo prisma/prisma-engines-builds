@@ -89,22 +89,3 @@ jobs:
           name: android
           path: |
             ${{ github.workspace }}/query-engine/query-engine-c-abi/android/*
-
-  combine-artifacts:
-    # Do not change `name`, prisma-engines Buildkite build job depends on this name ending with the commit
-    name: 'Combine iOS and Android artifacts on branch ${{ github.event.ref }} for commit ${{ inputs.commit }}'
-    runs-on: ubuntu-latest
-    needs:
-      - build-ios
-      - build-android
-    steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v4
-
-      - name: Upload combined artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: react-native
-          path: |
-            ${{ github.workspace }}/ios
-            ${{ github.workspace }}/android
