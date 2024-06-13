@@ -77,8 +77,9 @@ jobs:
           # A previous run ID can be specified, to avoid the build step
           # First disable the build step, then specify the run ID
           # The github-token is mandatory for this to work
-          # https://github.com/prisma/prisma-engines-builds/actions/runs/9500624695/artifacts/1598243732
-          run-id: 9500624695
+          # https://github.com/prisma/prisma-engines-builds/actions/runs/9503742086
+          # TODO comment out these 2 lines
+          run-id: 9503742086
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'R2: Check if artifacts were already built and uploaded before via `.finished` file'
