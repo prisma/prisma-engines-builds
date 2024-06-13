@@ -51,12 +51,13 @@ jobs:
     runs-on: ubuntu-22.04
     # concurrency:
     # group: ${{ inputs.commit }}
-    needs:
-      - build-linux
-      - build-macos-intel
-      - build-macos-silicon
-      - build-react-native
-      - build-windows
+    # TODO uncomment these lines after removing the harcoded run-id in the download-artifact step
+    # needs:
+    #   - build-linux
+    #   - build-macos-intel
+    #   - build-macos-silicon
+    #   - build-react-native
+    #   - build-windows
 
     env:
       BUCKET_NAME: 'prisma-builds-github-actions'
