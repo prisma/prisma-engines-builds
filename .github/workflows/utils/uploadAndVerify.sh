@@ -48,6 +48,7 @@ fi
 find . -type f -print0 | xargs -0I {} sh -c '
     echo "Unpacking {} file."
     gzip -d "{}" --keep -q
+    wrong something
 ';
 
 # Verify .sha256 and .sig files
