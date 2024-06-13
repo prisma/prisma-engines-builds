@@ -220,7 +220,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
-        run: sh checkFinishedMarker.sh
+        run: sh utils/checkFinishedMarker.sh
 
       # - name: 'S3: Check if artifacts were already built and uploaded before via `.finished` file'
       #   env:
@@ -229,7 +229,7 @@ jobs:
       #     AWS_DEFAULT_REGION: 'eu-west-1'
       #     AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #   run: sh checkFinishedMarker.sh
+      #   run: sh utils/checkFinishedMarker.sh
 
       - name: Display structure of downloaded files
         run: ls -R engines-artifacts
@@ -281,14 +281,14 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
-        run: sh uploadAndVerify.sh r2
+        run: utils/uploadAndVerify.sh r2
 
       # - name: 'Upload to AWS S3 bucket and verify uploaded files'
       #   env:
       #     AWS_DEFAULT_REGION: 'eu-west-1'
       #     AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #   run: sh uploadAndVerify.sh s3
+      #   run: sh utils/uploadAndVerify.sh s3
 
       # TODO: currently, we upload a .finished file to each target dir
       # We can use a global .finished with this new setup?
