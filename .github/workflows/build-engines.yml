@@ -228,6 +228,7 @@ jobs:
           ls -R .
 
       - name: 'TODO: Creates a SHA256 sum file (.sha256) next to each file.'
+        working-directory: engines-artifacts
         run: |
           find . -type f -exec sh -c '
             sha256sum "1%" > "$1.sha256" 
@@ -260,7 +261,7 @@ jobs:
         run: |
           echo "Upload to R2"
 
-          aws s3 sync . $DESTINATION_TARGET_PATH --include "*.gz"
+          aws s3 sync . $DESTINATION_TARGET_PATH --include "*.gz" --include "*.sha256" --include "*.sig"
 
       - run: mkdir engines-artifacts-from-r2
 
