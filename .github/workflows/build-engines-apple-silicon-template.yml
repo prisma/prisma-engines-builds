@@ -47,7 +47,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: binaries
+          name: macos-silicon
           path: |
             ${{ github.workspace }}/target/aarch64-apple-darwin/release/schema-engine
             ${{ github.workspace }}/target/aarch64-apple-darwin/release/prisma-fmt

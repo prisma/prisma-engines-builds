@@ -42,7 +42,7 @@ jobs:
 
       - uses: actions/upload-artifact@v4
         with:
-          name: binaries
+          name: windows
           path: |
             ${{ github.workspace }}/target/release/*.exe
             ${{ github.workspace }}/target/release/*.dll
