@@ -194,7 +194,8 @@ jobs:
     # name: 'Release artifacts from branch ${{ github.event.ref }} for commit ${{ github.event.inputs.commit }}'
     name: 'Release artifacts from branch ${{ github.event.ref }} for commit 6f3b8db04fa234ab2812fdd27456e9d9590eedb1'
     runs-on: ubuntu-22.04
-    concurrency: ${{ github.event.inputs.commit }}
+    # concurrency:
+    # group: ${{ github.event.inputs.commit }}
     needs:
       - build-linux
       # TODO
