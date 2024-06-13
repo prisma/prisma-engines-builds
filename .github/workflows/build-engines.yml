@@ -261,7 +261,7 @@ jobs:
         run: |
           echo "Upload to R2"
 
-          aws s3 sync . $DESTINATION_TARGET_PATH --include "*.gz" --include "*.sha256" --include "*.sig"
+          aws s3 sync . $DESTINATION_TARGET_PATH --exclude "*" --include "*.gz" --include "*.sha256" --include "*.sig"
 
       - run: mkdir engines-artifacts-from-r2
 
@@ -280,4 +280,4 @@ jobs:
 
           touch .finished
 
-          aws s3 cp .finished $DESTINATION_TARGET_PATH
+          aws s3 cp .finished "$DESTINATION_TARGET_PATH/.finished"
