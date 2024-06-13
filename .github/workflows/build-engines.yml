@@ -217,9 +217,18 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R engines-artifacts
 
+      - name: 'TODO: Compressing engine files'
+        working-directory: engines-artifacts
+        run: |
+          for file in $(find . -type f); do
+            gzip -c "$file" ? "$file.gz"
+          done
+
+          ls -R .
+
       - name: 'TODO: Creates a SHA256 sum file (.sha256) next to each file.'
         run: |
-          for file in $(find engines-artifacts -type f); do
+          for file in $(find . -type f); do
             sha256sum "$file" > "$file.sha256" 
           done
 
@@ -233,20 +242,13 @@ jobs:
       - name: List keys
         run: gpg -K
 
-      - name: 'TODO: Creates a GPG detached signature (.sig) next to each file.'
+      - name: 'TODO: Creates a GPG detached signature (.sig) next to each file (excluding .sha256 files).'
         working-directory: engines-artifacts
         run: |
-          # exclude .sha256 files
-          for file in $(find engines-artifacts -type f ! -name "*.sha256"); do
+          for file in $(find . -type f ! -name "*.sha256"); do
             gpg --detach-sign --armor --batch --output "${file#*/}.sig" "$file"
           done
 
-          ls -R .
-
-      - name: 'TODO: Compressing engine files'
-        working-directory: engines-artifacts
-        run: |
-          for f in engines-artifacts/*; do gzip -c $f > $f.gz; done
           ls -R .
 
       - name: 'TODO: upload to S3 & R2'
