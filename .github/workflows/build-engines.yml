@@ -225,7 +225,7 @@ jobs:
             echo ".finished file marker was NOT found. Continuing..."
           else
             echo "it exists"
-            echo ".finished file marker was found for $TARGET at $URL - This means that artifacts were already uploaded in a previous run. Aborting to avoid overwriting the artifacts.",
+            echo ".finished file marker was found at $FILE_PATH - This means that artifacts were already uploaded in a previous run. Aborting to avoid overwriting the artifacts.",
             exit 1
           fi;
 
