@@ -250,10 +250,10 @@ jobs:
         run: |
           set -eu
 
-          find . -type f -print0 | xargs -0I {} sh -c '
-              gzip -c "{}" > "{}.gz"
-              echo "{}.gz file created."
-          ';
+          find . -type f | while read filename; do
+            gzip -c "$filename" > "{}.gz"
+            echo "$filename.gz file created."
+          done
 
           ls -Rl .
 
@@ -262,10 +262,10 @@ jobs:
         run: |
           set -eu
 
-          find . -type f -print0 | xargs -0I {} sh -c '
-            sha256sum "{}" > "{}.sha256" 
-            echo "{}.sha256 file created."
-          ';
+          find . -type f | while read filename; do
+            sha256sum "$filename" > "$filename.sha256" 
+            echo "$filename.sha256 file created."
+          done
 
           ls -Rl .
 

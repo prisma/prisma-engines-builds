@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -eux
+set -eux;
 
 # engines-artifacts-from-r2
 # engines-artifacts-from-s3
@@ -45,26 +45,26 @@ if [ "$FILECOUNT_FOR_SIG" -eq 0 ]; then
 fi
 
 # Unpack all .gz files first
-find . -type f -print0 | xargs -0I {} sh -c '
-    echo "Unpacking {} file."
-    gzip -d "{}" --keep -q
-    wrong something
-';
+find . -type f | while read filename; do
+    echo "Unpacking $filename file."
+    gzip -d "$filename" --keep -q
+done
+
 
 # Verify .sha256 and .sig files
-find . -type f -print0 | xargs -0I {} sh -c '
-    if [[ {} == *.sha256 ]]; then
-        echo "Validating sha256 sum."
-        sha256sum -c "{}"
+find . -type f | while read filename; do
+    if [[ $filename == *.sha256 ]]; then
+    echo "Validating sha256 sum."
+    sha256sum -c "$filename"
 
-    elif [[ {} == *.sig ]]; then
+    elif [[ $filename == *.sig ]]; then
         # Remove .sig from the file name
-        fileToVerify=$(echo {} | rev | cut -c5- | rev)
+        fileToVerify=$(echo $filename | rev | cut -c5- | rev)
 
-        echo "Validating signature {} for $fileToVerify"
-        gpg --verify "{}" "$fileToVerify"
+        echo "Validating signature $filename for $fileToVerify"
+        gpg --verify "$filename" "$fileToVerify"
     fi
-';
+done
 
 echo "Upload .finished marker file"
 touch .finished
