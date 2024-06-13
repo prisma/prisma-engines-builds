@@ -92,7 +92,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
         working-directory: .github/workflows/utils
-        run: sh checkFinishedMarker.sh
+        run: |
+          # TODO remove
+          aws s3 rm $DESTINATION_TARGET_PATH --recursive
+
+          sh checkFinishedMarker.sh
 
       # - name: 'S3: Check if artifacts were already built and uploaded before via `.finished` file'
       #   env:
