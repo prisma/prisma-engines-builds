@@ -281,7 +281,7 @@ jobs:
 
           ls -R .
 
-      - name: 'Upload to Cloudflare R2 bucket and verify uploaded files'
+      - name: 'Cloudflare R2:: Upload to bucket and verify uploaded files'
         # https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-envvars.html
         env:
           AWS_DEFAULT_REGION: 'auto'
@@ -290,7 +290,19 @@ jobs:
           AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
         run: sh .github/workflows/utils/uploadAndVerify.sh r2
 
-      # - name: 'Upload to AWS S3 bucket and verify uploaded files'
+      - name: 'Cloudflare R2: Upload .finished marker file'
+        env:
+          AWS_DEFAULT_REGION: 'auto'
+          AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
+        run: |
+          echo "Upload .finished marker file"
+          touch .finished
+          aws s3 cp .finished "$DESTINATION_TARGET_PATH/.finished"
+          rm .finished
+
+      # - name: 'AWS S3: Upload to bucket and verify uploaded files'
       #   env:
       #     AWS_DEFAULT_REGION: 'eu-west-1'
       #     AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
@@ -298,10 +310,13 @@ jobs:
       #   working-directory: .github/workflows/utils
       #   run: sh uploadAndVerify.sh s3
 
-      # TODO: currently, we upload a .finished file to each target dir
-      # We can use a global .finished with this new setup?
-      - name: 'Upload .finished marker file'
-        run: |
-          echo "Upload .finished marker file"
-          touch .finished
-          aws s3 cp .finished "$DESTINATION_TARGET_PATH/.finished"
+      # - name: 'AWS S3: Upload .finished marker file'
+      #   env:
+      #     AWS_DEFAULT_REGION: 'eu-west-1'
+      #     AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #   run: |
+      #     echo "Upload .finished marker file"
+      #     touch .finished
+      #     aws s3 cp .finished "$DESTINATION_TARGET_PATH/.finished"
+      #     rm .finished

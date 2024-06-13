@@ -15,7 +15,6 @@ echo "Downloading files..."
 aws s3 sync $DESTINATION_TARGET_PATH .
 
 echo "Verifing downloaded files..."
-
 ls -R .
 
 FILECOUNT_FOR_SHA256=$(find . -type f -name "*.sha256" | wc -l)
