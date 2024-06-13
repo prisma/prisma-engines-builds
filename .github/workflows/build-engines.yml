@@ -243,6 +243,8 @@ jobs:
       - name: 'Create compressed engine files (.gz)'
         working-directory: engines-artifacts
         run: |
+          set -eu
+
           find . -type f -exec sh -c '
             gzip -c "1%" > "$1.gz"
             echo "$1.gz"
@@ -253,8 +255,10 @@ jobs:
       - name: 'Create SHA256 checksum files (.sha256).'
         working-directory: engines-artifacts
         run: |
+          set -eu
+
           find . -type f -exec sh -c '
-            sha256sum "1%" > "$1.sha256" 
+            sha256sum "$1" > "$1.sha256" 
             echo "$1.sha256"
           ' sh {} \;
 
@@ -277,6 +281,8 @@ jobs:
       - name: 'Create a GPG detached signature (.sig)'
         working-directory: engines-artifacts
         run: |
+          set -eu
+
           for file in $(find . -type f ! -name "*.sha256"); do
             gpg --detach-sign --armor --batch --output "${file#*/}.sig" "$file"
           done
