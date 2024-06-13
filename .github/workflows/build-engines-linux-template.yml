@@ -10,7 +10,7 @@ on:
 
 jobs:
   build:
-    name: '${{ matrix.target.name }} (on branch ${{ github.event.ref }} for commit ${{ github.event.inputs.commit }})'
+    name: '${{ matrix.target.name }} for commit ${{ inputs.commit }}'
     # env:
     #   # default build config
     #   SQLITE_MAX_VARIABLE_NUMBER: 250000
@@ -95,14 +95,14 @@ jobs:
 
     steps:
       - name: Output link to commit
-        if: ${{ github.event.inputs.commit }}
-        run: echo https://github.com/prisma/prisma-engines/commit/${{ github.event.inputs.commit }}
+        if: ${{ inputs.commit }}
+        run: echo https://github.com/prisma/prisma-engines/commit/${{ inputs.commit }}
 
-      - name: Checkout ${{ github.event.inputs.commit }}
+      - name: Checkout ${{ inputs.commit }}
         uses: actions/checkout@v4
         with:
           repository: prisma/prisma-engines
-          ref: ${{ github.event.inputs.commit }}
+          ref: ${{ inputs.commit }}
 
       - uses: dtolnay/rust-toolchain@stable
 

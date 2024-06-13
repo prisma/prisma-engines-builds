@@ -1,5 +1,5 @@
 name: Build Engines
-# run-name: Build Engines for ${{ github.event.inputs.commit }}
+# run-name: Build Engines for ${{ inputs.commit }}
 run-name: Build Engines for 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 on:
   workflow_dispatch:
@@ -14,43 +14,43 @@ jobs:
     name: Build Engines for Linux
     uses: ./.github/workflows/build-engines-linux-template.yml
     with:
-      # commit: ${{ github.event.inputs.commit }}
+      # commit: ${{ inputs.commit }}
       commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 
   build-macos-intel:
     name: Build Engines for Apple Intel
     uses: ./.github/workflows/build-engines-apple-intel-template.yml
     with:
-      # commit: ${{ github.event.inputs.commit }}
+      # commit: ${{ inputs.commit }}
       commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 
   build-macos-silicon:
     name: Build Engines for Apple Silicon
     uses: ./.github/workflows/build-engines-apple-silicon-template.yml
     with:
-      # commit: ${{ github.event.inputs.commit }}
+      # commit: ${{ inputs.commit }}
       commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 
   build-react-native:
     name: Build Engines for React native
     uses: ./.github/workflows/build-engines-react-native-template.yml
     with:
-      # commit: ${{ github.event.inputs.commit }}
+      # commit: ${{ inputs.commit }}
       commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 
   build-windows:
     name: Build Engines for React native
     uses: ./.github/workflows/build-engines-windows-template.yml
     with:
-      # commit: ${{ github.event.inputs.commit }}
+      # commit: ${{ inputs.commit }}
       commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 
   release-artifacts:
-    # name: 'Release artifacts from branch ${{ github.event.ref }} for commit ${{ github.event.inputs.commit }}'
+    # name: 'Release artifacts from branch ${{ github.event.ref }} for commit ${{ inputs.commit }}'
     name: 'Release artifacts from branch ${{ github.event.ref }} for commit 6f3b8db04fa234ab2812fdd27456e9d9590eedb1'
     runs-on: ubuntu-22.04
     # concurrency:
-    # group: ${{ github.event.inputs.commit }}
+    # group: ${{ inputs.commit }}
     needs:
       - build-linux
       - build-macos-intel
@@ -60,8 +60,8 @@ jobs:
 
     env:
       BUCKET_NAME: 'prisma-builds-github-actions'
-      # PRISMA_ENGINES_COMMIT_SHA: ${{ github.event.inputs.commit }}
-      # DESTINATION_TARGET_PATH: 's3://prisma-builds-github-actions/all_commits/${{ github.event.inputs.commit }}'
+      # PRISMA_ENGINES_COMMIT_SHA: ${{ inputs.commit }}
+      # DESTINATION_TARGET_PATH: 's3://prisma-builds-github-actions/all_commits/${{ inputs.commit }}'
       PRISMA_ENGINES_COMMIT_SHA: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
       DESTINATION_TARGET_PATH: 's3://prisma-builds-github-actions/all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1'
 
@@ -83,7 +83,7 @@ jobs:
 
       - name: 'R2: Check if artifacts were already built and uploaded before via `.finished` file'
         env:
-          # FILE_PATH: 'all_commits/${{ github.event.inputs.commit }}/.finished'
+          # FILE_PATH: 'all_commits/${{ inputs.commit }}/.finished'
           FILE_PATH: 'all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1/.finished'
           AWS_DEFAULT_REGION: 'auto'
           AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
@@ -94,7 +94,7 @@ jobs:
 
       # - name: 'S3: Check if artifacts were already built and uploaded before via `.finished` file'
       #   env:
-      #     # FILE_PATH: 'all_commits/${{ github.event.inputs.commit }}/.finished'
+      #     # FILE_PATH: 'all_commits/${{ inputs.commit }}/.finished'
       #     FILE_PATH: 'all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1/.finished'
       #     AWS_DEFAULT_REGION: 'eu-west-1'
       #     AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
