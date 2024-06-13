@@ -104,8 +104,6 @@ jobs:
           repository: prisma/prisma-engines
           ref: ${{ inputs.commit }}
 
-      - uses: dtolnay/rust-toolchain@stable
-
       - uses: actions/cache@v4
         with:
           path: |
@@ -116,6 +114,8 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
+
+      - uses: dtolnay/rust-toolchain@stable
 
       - name: Construct build command
         id: construct_build_command

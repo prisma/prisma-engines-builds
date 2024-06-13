@@ -23,10 +23,6 @@ jobs:
           repository: prisma/prisma-engines
           ref: ${{ inputs.commit }}
 
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: x86_64-apple-ios,aarch64-apple-ios,aarch64-apple-ios-sim
-
       - uses: actions/cache@v4
         with:
           path: |
@@ -37,6 +33,10 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: x86_64-apple-ios,aarch64-apple-ios,aarch64-apple-ios-sim
 
       - run: |
           cd query-engine/query-engine-c-abi
@@ -61,14 +61,6 @@ jobs:
           repository: prisma/prisma-engines
           ref: ${{ inputs.commit }}
 
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android,i686-linux-android
-
-      - uses: nttld/setup-ndk@v1
-        with:
-          ndk-version: r26d
-
       - uses: actions/cache@v4
         with:
           path: |
@@ -79,6 +71,14 @@ jobs:
             target/
           key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.lock') }}
           restore-keys: ${{ runner.os }}-cargo-
+
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android,i686-linux-android
+
+      - uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r26d
 
       - run: |
           cd query-engine/query-engine-c-abi
