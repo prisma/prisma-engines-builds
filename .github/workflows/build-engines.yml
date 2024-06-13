@@ -207,6 +207,10 @@ jobs:
       DESTINATION_TARGET_PATH: 's3://prisma-builds-github-actions/all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1'
 
     steps:
+      # Because we need the scripts
+      - name: Checkout git repository
+        uses: actions/checkout@v4
+
       # https://github.com/actions/download-artifact
       - uses: actions/download-artifact@v4
         with:
