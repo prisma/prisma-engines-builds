@@ -45,29 +45,25 @@ if [ "$FILECOUNT_FOR_SIG" -eq 0 ]; then
 fi
 
 # Unpack all .gz files first
-find . -type f -name "*.gz" -exec sh -c '
-    
-    echo "Unpacking .gz file."
-    gzip -d "$1" --keep -q
-
-' sh {} \;
+find . -type f -print0 | xargs -0I {} sh -c '
+    echo "Unpacking {} file."
+    gzip -d "{}" --keep -q
+';
 
 # Verify .sha256 and .sig files
-find . -type f -exec sh -c '
-    
-    if [[ $1 == *.sha256 ]]; then
+find . -type f -print0 | xargs -0I {} sh -c '
+    if [[ {} == *.sha256 ]]; then
         echo "Validating sha256 sum."
-        sha256sum -c "$1"
+        sha256sum -c "{}"
 
-    elif [[ $1 == *.sig ]]; then
+    elif [[ {} == *.sig ]]; then
         # Remove .sig from the file name
-        fileToVerify=$(echo $1 | rev | cut -c5- | rev)
+        fileToVerify=$(echo {} | rev | cut -c5- | rev)
 
-        echo "Validating signature $1 for $fileToVerify"
-        gpg --verify "$1" "$fileToVerify"
+        echo "Validating signature {} for $fileToVerify"
+        gpg --verify "{}" "$fileToVerify"
     fi
-
-' sh {} \;
+';
 
 echo "Upload .finished marker file"
 touch .finished
