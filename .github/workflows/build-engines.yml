@@ -229,7 +229,10 @@ jobs:
       - name: 'TODO: verify uploaded files'
         run: |
           echo "Verify uploaded files"
+
+          TARGET="s3://$BUCKET_NAME/test"
           aws s3 sync $TARGET engines-artifacts-from-r2
+
           ls -R engines-artifacts-from-r2
 
       - name: 'TODO: Upload .finished marker file'
