@@ -21,6 +21,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          repository: prisma/prisma-engines
           ref: ${{ github.event.inputs.commit }}
 
       - uses: dtolnay/rust-toolchain@stable
@@ -56,7 +57,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
+          repository: prisma/prisma-engines
           ref: ${{ github.event.inputs.commit }}
+
       - uses: dtolnay/rust-toolchain@stable
         with:
           targets: aarch64-linux-android,armv7-linux-androideabi,x86_64-linux-android,i686-linux-android
