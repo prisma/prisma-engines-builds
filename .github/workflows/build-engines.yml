@@ -219,7 +219,9 @@ jobs:
 
       - name: 'TODO: Creates a SHA256 sum file (.sha256) next to each file.'
         run: |
-          for f in engines-artifacts/*; do sha256sum $f > $f.sha256; done
+          for file in $(find engines-artifacts -type f); do
+            sha256sum "$file" > "$file.sha256" 
+          done
 
       # https://github.com/crazy-max/ghaction-import-gpg
       - name: Import GPG key
