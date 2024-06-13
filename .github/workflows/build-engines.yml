@@ -286,8 +286,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
-        working-directory: .github/workflows/utils
-        run: sh uploadAndVerify.sh r2
+        run: sh .github/workflows/utils/uploadAndVerify.sh r2
 
       # - name: 'Upload to AWS S3 bucket and verify uploaded files'
       #   env:
