@@ -64,9 +64,52 @@ find . -type f | while read filename; do
         echo "Validating signature $filename for $fileToVerify"
         gpg --verify "$filename" "$fileToVerify"
     fi
+
+    something wrong
 done
 
 echo "Upload .finished marker file"
 touch .finished
 aws s3 cp .finished "$DESTINATION_TARGET_PATH/.finished"
 rm .finished
+
+# TODO
+# s!("-e"), format!("VALIDATE_LDD_OUTPUT={}", if binary.should_validate_ldd(target) { "y" } else { "n" }),
+# if [[ "$VALIDATE_LDD_OUTPUT" == "y" ]]; then
+#     echo "Validating SSL linking."
+#     OUTPUT=$(ldd "$BINARY_NAME"| grep "libssl" | cut -f2 | cut -d'.' -f1)
+
+#     if [[ "$OUTPUT" == "libssl" ]]; then
+#         echo "Linux build linked correctly to libssl."
+#     else
+#         echo "Linux build linked incorrectly to libssl."
+#         exit 1
+#     fi
+# else
+#     echo "Skipping libssl link validation."
+# fi
+
+
+# let binary_name = match binary.artifact_type() {
+#     ArtifactType::Bin => config.with_binary_file_ext(binary),
+#     ArtifactType::Lib => config.with_node_api_file_ext(binary),
+#     ArtifactType::Archive => binary.as_ref().to_owned(),
+# };
+
+# #[rustfmt::skip]
+# let docker_opts = vec![
+#     s!("run"),
+#     s!("-w"), s!("/check"),
+#     s!("-v"), format!("{}:/root/keys/prisma-gpg-private.asc", key_file_path),
+#     s!("-v"), format!("{}:/check", sub_check_folder.to_str().unwrap()),
+#     s!("-e"), format!("BINARY_NAME={}", binary_name),
+#     s!("-e"), format!("BUCKET_PATH={}", bucket_path.path_segments),
+#     s!("-e"), format!("CHECK_DOMAIN_NAME={}", destination.check_domain_name()),
+#     s!("-e"), format!("OS={}", target),
+#     s!("-e"), format!("VALIDATE_LDD_OUTPUT={}", if binary.should_validate_ldd(target) { "y" } else { "n" }),
+#     s!("-e"), s!("KEY_PATH=/root/keys/prisma-gpg-private.asc"),
+#     s!("-e"), format!("KEY_PASS={}", key_pass),
+#     s!("-e"), format!("GZIPPED={}", if binary.needs_gz_compression() { "y" } else { "n" }),
+#     s!("prismagraphql/build:release"),
+#     s!("/check/validate.sh"),
+# ];
