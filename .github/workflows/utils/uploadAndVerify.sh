@@ -18,7 +18,7 @@ echo "Verifing downloaded files..."
 
 ls -R .
 
-Unpack all .gz files first
+# Unpack all .gz files first
 find . -type f -name "*.gz" -exec sh -c '
     
     echo "Unpacking .gz file."
