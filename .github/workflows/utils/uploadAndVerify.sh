@@ -2,14 +2,23 @@
 
 set -eux
 
-mkdir engines-artifacts-from-r2 engines-artifacts-from-s3
+# engines-artifacts-from-r2
+# engines-artifacts-from-s3
+LOCAL_DIR_PATH=$1
+
+if [ -z "$LOCAL_DIR_PATH" ]; then
+    echo "::error::LOCAL_DIR_PATH is not set."
+    exit 1
+fi
+
+mkdir $LOCAL_DIR_PATH
 
 cd engines-artifacts
 
 echo "Upload to R2"
 aws s3 sync . $DESTINATION_TARGET_PATH --exclude "*" --include "*.gz" --include "*.sha256" --include "*.sig"
 
-cd ../engines-artifacts-from-r2
+cd "../$LOCAL_DIR_PATH"
 
 echo "Downloading files..."
 aws s3 sync $DESTINATION_TARGET_PATH .
@@ -61,3 +70,7 @@ find . -type f -exec sh -c '
 
 ' sh {} \;
 
+echo "Upload .finished marker file"
+touch .finished
+aws s3 cp .finished "$DESTINATION_TARGET_PATH/.finished"
+rm .finished
