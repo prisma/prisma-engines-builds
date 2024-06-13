@@ -205,6 +205,8 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
       AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
+      PRISMA_ENGINES_COMMIT_SHA: ${{ github.event.inputs.commit }}
+      DESTINATION_TARGET_PATH: 's3://prisma-builds-github-actions/all_commits/${{ github.event.inputs.commit }}'
 
     steps:
       # https://github.com/actions/download-artifact
@@ -215,25 +217,53 @@ jobs:
       - name: Display structure of downloaded files
         run: ls -R engines-artifacts
 
-      - name: 'TODO: Compressing binary files'
+      - name: 'TODO: Creates a SHA256 sum file (.sha256) next to each file.'
         run: |
-          echo "TODO"
+          for f in engines-artifacts/*; do sha256sum $f > $f.sha256; done
+
+      # https://github.com/crazy-max/ghaction-import-gpg
+      - name: Import GPG key
+        uses: crazy-max/ghaction-import-gpg@v6
+        with:
+          gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+          passphrase: ${{ secrets.GPG_KEY_PASSPHRASE }}
+
+      - name: List keys
+        run: gpg -K
+
+      - name: 'TODO: Creates a GPG detached signature (.sig) next to each file.'
+        working-directory: engines-artifacts
+        run: |
+          # exclude .sha256 files
+          for file in $(find engines-artifacts -type f ! -name "*.sha256"); do
+            gpg --detach-sign --armor --batch --output "${file#*/}.sig" "$file"
+          done
+
+          ls -R .
+
+      - name: 'TODO: Compressing engine files'
+        working-directory: engines-artifacts
+        run: |
+          for f in engines-artifacts/*; do gzip -c $f > $f.gz; done
+          ls -R .
 
       - name: 'TODO: upload to S3 & R2'
+        working-directory: engines-artifacts
         run: |
           echo "Upload to R2"
 
-          TARGET="s3://$BUCKET_NAME/test"
-          aws s3 sync engines-artifacts $TARGET
+          aws s3 sync . $DESTINATION_TARGET_PATH --include "*.gz"
+
+      - run: mkdir engines-artifacts-from-r2
 
       - name: 'TODO: verify uploaded files'
+        working-directory: engines-artifacts-from-r2
         run: |
           echo "Verify uploaded files"
 
-          TARGET="s3://$BUCKET_NAME/test"
-          aws s3 sync $TARGET engines-artifacts-from-r2
+          aws s3 sync $DESTINATION_TARGET_PATH .
 
-          ls -R engines-artifacts-from-r2
+          ls -R .
 
       - name: 'TODO: Upload .finished marker file'
         run: |
@@ -241,5 +271,4 @@ jobs:
 
           touch .finished
 
-          TARGET="s3://$BUCKET_NAME/test"
-          aws s3 cp .finished $TARGET
+          aws s3 cp .finished $DESTINATION_TARGET_PATH
