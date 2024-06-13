@@ -221,7 +221,7 @@ jobs:
         working-directory: engines-artifacts
         run: |
           for file in $(find . -type f); do
-            gzip -c "$file" ? "$file.gz"
+            gzip -c "$file" > "$file.gz"
           done
 
           ls -R .
