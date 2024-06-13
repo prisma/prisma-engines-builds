@@ -214,6 +214,10 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           path: engines-artifacts
+          # For debug purposes
+          # A previous run ID can be specified, to avoid the build step
+          # First disable the build step, then specify the run ID
+          # The github-token is mandatory for this to work
           # https://github.com/prisma/prisma-engines-builds/actions/runs/9500624695/artifacts/1598243732
           run-id: 9500624695
           github-token: ${{ secrets.GITHUB_TOKEN }}
@@ -247,8 +251,8 @@ jobs:
           set -eu
 
           find . -type f -exec sh -c '
-            gzip -c "1%" > "$1.gz"
-            echo "$1.gz"
+            gzip -c "$1" > "$1.gz"
+            echo "$1.gz file created."
           ' sh {} \;
 
           ls -Rl .
@@ -260,7 +264,7 @@ jobs:
 
           find . -type f -exec sh -c '
             sha256sum "$1" > "$1.sha256" 
-            echo "$1.sha256"
+            echo "$1.sha256 file created."
           ' sh {} \;
 
           ls -Rl .
