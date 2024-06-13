@@ -194,21 +194,13 @@ jobs:
     # name: 'Release artifacts from branch ${{ github.event.ref }} for commit ${{ github.event.inputs.commit }}'
     name: 'Release artifacts from branch ${{ github.event.ref }} for commit 6f3b8db04fa234ab2812fdd27456e9d9590eedb1'
     runs-on: ubuntu-22.04
+    concurrency:
+      group: ${{ github.event.inputs.commit }}
     needs:
       - build-linux
       # TODO
-
     env:
       BUCKET_NAME: 'prisma-builds-github-actions'
-      # R2_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
-      # R2_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-      # R2_ENDPOINT: ${{ vars.R2_ENDPOINT }}
-
-      # https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-envvars.html
-      AWS_DEFAULT_REGION: 'auto'
-      AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
-      AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-      AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
       # PRISMA_ENGINES_COMMIT_SHA: ${{ github.event.inputs.commit }}
       # DESTINATION_TARGET_PATH: 's3://prisma-builds-github-actions/all_commits/${{ github.event.inputs.commit }}'
       PRISMA_ENGINES_COMMIT_SHA: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
@@ -220,26 +212,29 @@ jobs:
         with:
           path: engines-artifacts
 
-      - name: 'Check if artifacts were already built and uploaded before via `.finished` file'
+      - name: 'R2: Check if artifacts were already built and uploaded before via `.finished` file'
         env:
           # FILE_PATH: 'all_commits/${{ github.event.inputs.commit }}/.finished'
           FILE_PATH: 'all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1/.finished'
-        run: |
-          set -eux
+          AWS_DEFAULT_REGION: 'auto'
+          AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
+        run: sh checkFinishedMarker.sh
 
-          object_exists=$(aws s3api head-object --bucket $BUCKET_NAME --key $FILE_PATH --debug || true)
-          if [ -z "$object_exists" ]; then
-            echo ".finished file marker was NOT found. Continuing..."
-          else
-            echo "it exists"
-            echo ".finished file marker was found at $FILE_PATH - This means that artifacts were already uploaded in a previous run. Aborting to avoid overwriting the artifacts.",
-            exit 1
-          fi;
+      # - name: 'S3: Check if artifacts were already built and uploaded before via `.finished` file'
+      #   env:
+      #     # FILE_PATH: 'all_commits/${{ github.event.inputs.commit }}/.finished'
+      #     FILE_PATH: 'all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1/.finished'
+      #     AWS_DEFAULT_REGION: 'eu-west-1'
+      #     AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #   run: sh checkFinishedMarker.sh
 
       - name: Display structure of downloaded files
         run: ls -R engines-artifacts
 
-      - name: 'TODO: Compressing engine files'
+      - name: 'Create compressed engine files (.gz)'
         working-directory: engines-artifacts
         run: |
           find . -type f -exec sh -c '
@@ -249,7 +244,7 @@ jobs:
 
           ls -R .
 
-      - name: 'TODO: Creates a SHA256 sum file (.sha256) next to each file.'
+      - name: 'Create SHA256 checksum files (.sha256).'
         working-directory: engines-artifacts
         run: |
           find . -type f -exec sh -c '
@@ -269,7 +264,8 @@ jobs:
       - name: List keys
         run: gpg -K
 
-      - name: 'TODO: Creates a GPG detached signature (.sig) next to each file (excluding .sha256 files).'
+      # next to each file (excluding .sha256 files)
+      - name: 'Create a GPG detached signature (.sig)'
         working-directory: engines-artifacts
         run: |
           for file in $(find . -type f ! -name "*.sha256"); do
@@ -278,30 +274,26 @@ jobs:
 
           ls -R .
 
-      - name: 'TODO: upload to S3 & R2'
-        working-directory: engines-artifacts
-        run: |
-          echo "Upload to R2"
+      - name: 'Upload to Cloudflare R2 bucket and verify uploaded files'
+        # https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-envvars.html
+        env:
+          AWS_DEFAULT_REGION: 'auto'
+          AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
+        run: sh uploadAndVerify.sh r2
 
-          aws s3 sync . $DESTINATION_TARGET_PATH --exclude "*" --include "*.gz" --include "*.sha256" --include "*.sig"
-
-      - run: mkdir engines-artifacts-from-r2
-
-      - name: 'TODO: verify uploaded files'
-        working-directory: engines-artifacts-from-r2
-        run: |
-          echo "Verify uploaded files"
-
-          aws s3 sync $DESTINATION_TARGET_PATH .
-
-          ls -R .
+      # - name: 'Upload to AWS S3 bucket and verify uploaded files'
+      #   env:
+      #     AWS_DEFAULT_REGION: 'eu-west-1'
+      #     AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #   run: sh uploadAndVerify.sh s3
 
       # TODO: currently, we upload a .finished file to each target dir
       # We can use a global .finished with this new setup?
-      - name: 'TODO: Upload .finished marker file'
+      - name: 'Upload .finished marker file'
         run: |
           echo "Upload .finished marker file"
-
           touch .finished
-
           aws s3 cp .finished "$DESTINATION_TARGET_PATH/.finished"
