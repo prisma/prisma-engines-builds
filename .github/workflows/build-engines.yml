@@ -238,7 +238,7 @@ jobs:
       #   run: sh utils/checkFinishedMarker.sh
 
       - name: Display structure of downloaded files
-        run: ls -R engines-artifacts
+        run: ls -Rl engines-artifacts
 
       - name: 'Create compressed engine files (.gz)'
         working-directory: engines-artifacts
@@ -250,7 +250,7 @@ jobs:
             echo "$1.gz"
           ' sh {} \;
 
-          ls -R .
+          ls -Rl .
 
       - name: 'Create SHA256 checksum files (.sha256).'
         working-directory: engines-artifacts
@@ -262,7 +262,7 @@ jobs:
             echo "$1.sha256"
           ' sh {} \;
 
-          ls -R .
+          ls -Rl .
 
       # https://github.com/crazy-max/ghaction-import-gpg
       - name: Import GPG key
@@ -287,7 +287,7 @@ jobs:
             gpg --detach-sign --armor --batch --output "${file#*/}.sig" "$file"
           done
 
-          ls -R .
+          ls -Rl .
 
       - name: 'Cloudflare R2: Upload to bucket and verify uploaded files then create `.finished` file'
         # https://docs.aws.amazon.com/cli/v1/userguide/cli-configure-envvars.html
