@@ -40,7 +40,7 @@ jobs:
 
       - uses: dtolnay/rust-toolchain@stable
 
-      - run: cargo build --release
+      - run: cargo build --release -p query-engine -p query-engine-node-api -p schema-engine-cli -p prisma-fmt
 
       - name: Rename files
         working-directory: ${{ github.workspace }}/target/release/
