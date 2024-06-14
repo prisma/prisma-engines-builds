@@ -187,10 +187,13 @@ jobs:
           echo "Files in target/release before renaming"
           ls -la $RELEASE_DIR
 
+          echo "Copying files to engines-artifacts"
+          cp $RELEASE_DIR/ engines-artifacts
+
+          echo "Rename libquery_engine.so to libquery_engine.so.node for non-static targets"
           if [[ "$TARGET_NAME" == *-static-* ]]; then
-            echo "No renaming needed for static targets"
+            echo "Current target is static. Skipping."
           else
-            cp $RELEASE_DIR/ engines-artifacts
             mv engines-artifacts/libquery_engine.so engines-artifacts/libquery_engine.so.node
           fi
 
@@ -217,10 +220,13 @@ jobs:
           echo "Files in target/release before renaming"
           ls -la $RELEASE_DIR
 
+          echo "Copying files to engines-artifacts"
+          cp $RELEASE_DIR/ engines-artifacts
+
+          echo "Rename libquery_engine.so to libquery_engine.so.node for non-static targets"
           if [[ "$TARGET_NAME" == *-static-* ]]; then
-            echo "No renaming needed for static targets"
+            echo "Current target is static. Skipping."
           else
-            cp $RELEASE_DIR/ engines-artifacts
             mv engines-artifacts/libquery_engine.so engines-artifacts/libquery_engine.so.node
           fi
 
