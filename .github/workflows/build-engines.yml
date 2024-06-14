@@ -71,7 +71,7 @@ jobs:
     name: 'Decide if a release of the engines artifacts is necessary'
     runs-on: ubuntu-22.04
     outputs:
-      release: ${{ steps.decision.outputs.realease }}
+      release: ${{ steps.decision.outputs.release }}
     steps:
       - name: Debug Pull Request Event
         if: ${{ github.event_name == 'pull_request' }}
@@ -117,9 +117,13 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           EVENT_PATH: ${{ github.event_path }}
+          OUTPUTS_CHECK_COMMENT: ${{ steps.check-comments.outputs }}
+          OUTPUTS_CHECK_PR_DESC: ${{ steps.check-pr-description.outputs.release }}
         run: |
           echo "Event Name: $EVENT_NAME"
           echo "Event path: $EVENT_PATH"
+          echo "Check Comments outputs: $OUTPUTS_CHECK_COMMENT"
+          echo "Check PR Description outputs: $OUTPUTS_CHECK_PR_DESC"
 
       - name: Decide if a release is necessary
         if: ${{ github.event_name == 'push'  }} || ${{ steps.check-comments.outputs.comment-id != ''}} || ${{ needs.check-pr-description.outputs.release == 'true' }}
@@ -128,7 +132,7 @@ jobs:
           EVENT_NAME: ${{ github.event_name }}
           EVENT_PATH: ${{ github.event_path }}
           OUTPUTS_CHECK_COMMENT: ${{ steps.check-comments.outputs }}
-          OUTPUTS_CHECK_PR_DESC: ${{ steps.check-pr-description.outputs }}
+          OUTPUTS_CHECK_PR_DESC: ${{ steps.check-pr-description.outputs.release }}
         run: |
           echo "Event Name: $EVENT_NAME"
           echo "Event path: $EVENT_PATH"
