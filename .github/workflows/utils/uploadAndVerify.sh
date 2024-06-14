@@ -13,7 +13,13 @@ fi
 
 echo "Upload to R2"
 cd engines-artifacts
-aws s3 sync . $DESTINATION_TARGET_PATH --no-progress --exclude "*" --include "*.gz" --include "*.zip" --include "*.sha256" --include "*.sig"
+aws s3 sync . $DESTINATION_TARGET_PATH --no-progress \
+    --exclude "*" \
+    --include "*.node" \
+    --include "*.gz" \
+    --include "*.zip" \
+    --include "*.sha256" \
+    --include "*.sig"
 cd ".."
 
 echo "Downloading files..."
@@ -42,27 +48,6 @@ if [ "$FILECOUNT_FOR_SIG" -eq 0 ]; then
     exit 1
 fi
 
-# Unpack all .gz files first
-find . -type f | while read filename; do
-    echo "Unpacking $filename file."
-    gzip -d "$filename" --keep -q
-done
-
-# Verify .sha256 files
-find . -type f -name "*.sha256" | while read filename; do
-    echo "Validating sha256 sum."
-    sha256sum -c "$filename"
-done
-
-# Verify .sig files
-find . -type f -name "*.sig" | while read filename; do
-    # Remove .sig from the file name
-    fileToVerify=$(echo $filename | rev | cut -c5- | rev)
-
-    echo "Validating signature $filename for $fileToVerify"
-    gpg --verify "$filename" "$fileToVerify"
-done
-
 # Manual check
 # 
 # Set PROD env vars
@@ -89,14 +74,36 @@ done
 echo "Create list of files"
 find . | sort > ../currentFiles.txt
 cd ..
-
 echo "Comparing expectedFiles.txt vs currentFiles.txt"
 diff -c .github/workflows/utils/expectedFiles.txt currentFiles.txt
+cd $LOCAL_DIR_PATH
+
+# Unpack all .gz files first
+find . -type f | while read filename; do
+    echo "Unpacking $filename file."
+    gzip -d "$filename" --keep -q
+done
+
+# Verify .sha256 files
+find . -type f -name "*.sha256" | while read filename; do
+    echo "Validating sha256 sum."
+    sha256sum -c "$filename"
+done
+
+# Verify .sig files
+find . -type f -name "*.sig" | while read filename; do
+    # Remove .sig from the file name
+    fileToVerify=$(echo $filename | rev | cut -c5- | rev)
+
+    echo "Validating signature $filename for $fileToVerify"
+    gpg --verify "$filename" "$fileToVerify"
+done
 
 echo "Upload .finished marker file"
 touch .finished
 aws s3 cp .finished "$DESTINATION_TARGET_PATH/.finished"
 rm .finished
+
 
 # TODO
 # s!("-e"), format!("VALIDATE_LDD_OUTPUT={}", if binary.should_validate_ldd(target) { "y" } else { "n" }),
