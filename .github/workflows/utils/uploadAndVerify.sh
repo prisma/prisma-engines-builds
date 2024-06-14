@@ -49,7 +49,7 @@ find . -type f | while read filename; do
 done
 
 # Verify .sha256 files
-find . -type f | while read filename; do
+find . -type f -name "*.sha256" | while read filename; do
     echo "Validating sha256 sum."
     sha256sum -c "$filename"
 done
