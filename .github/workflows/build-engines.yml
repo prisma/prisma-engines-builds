@@ -222,9 +222,10 @@ jobs:
           cp -r rhel-openssl-3.0.x debian-openssl-3.0.x
 
       - name: Create .zip for react-native
-        working-directory: engines-artifacts/react-native
+        working-directory: engines-artifacts
         run: |
-          zip -r binaries.zip ios android
+          mkdir react-native
+          zip -r react-native/binaries.zip ios android
           rm -rf ios android
 
       - name: 'Create compressed engine files (.gz)'
