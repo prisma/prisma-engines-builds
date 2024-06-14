@@ -94,7 +94,7 @@ pwd
 ls
 
 echo "Comparing expectedFiles.txt vs currentFiles.txt"
-diff <(cat expectedFiles.txt) <(cd cat currentFiles.txt)
+diff -c expectedFiles.txt currentFiles.txt
 
 echo "Upload .finished marker file"
 touch .finished
