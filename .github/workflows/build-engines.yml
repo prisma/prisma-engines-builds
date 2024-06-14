@@ -200,14 +200,14 @@ jobs:
 
           sh checkFinishedMarker.sh
 
-      # - name: 'S3: Check if artifacts were already built and uploaded before via `.finished` file'
-      #   env:
-      #     # FILE_PATH: 'all_commits/${{ inputs.commit }}/.finished'
-      #     FILE_PATH: 'all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1/.finished'
-      #     AWS_DEFAULT_REGION: 'eu-west-1'
-      #     AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #   run: sh utils/checkFinishedMarker.sh
+      - name: 'S3: Check if artifacts were already built and uploaded before via `.finished` file'
+        env:
+          # FILE_PATH: 'all_commits/${{ inputs.commit }}/.finished'
+          FILE_PATH: 'all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1/.finished'
+          AWS_DEFAULT_REGION: 'eu-west-1'
+          AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: sh checkFinishedMarker.sh
 
       - name: Display structure of downloaded files
         run: ls -Rl engines-artifacts
@@ -284,13 +284,13 @@ jobs:
           AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
         run: sh .github/workflows/utils/uploadAndVerify.sh engines-artifacts-from-r2
 
-      # - name: 'AWS S3: Upload to bucket and verify uploaded files then create `.finished` file'
-      #   env:
-      #     AWS_DEFAULT_REGION: 'eu-west-1'
-      #     AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
-      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #   working-directory: .github/workflows/utils
-      #   run: sh uploadAndVerify.sh s3
+      - name: 'AWS S3: Upload to bucket and verify uploaded files then create `.finished` file'
+        env:
+          AWS_DEFAULT_REGION: 'eu-west-1'
+          AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        working-directory: .github/workflows/utils
+        run: sh .github/workflows/utils/uploadAndVerify.sh engines-artifacts-from-s3
 
       - name: Cleanup local directories
         run: rm -rf engines-artifacts engines-artifacts-from-r2 engines-artifacts-from-s3
