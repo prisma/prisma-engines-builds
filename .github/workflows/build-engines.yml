@@ -126,7 +126,7 @@ jobs:
           echo "Check PR Description outputs: $CHECK_PR_DESC"
 
       - name: Decide if a release is necessary
-        if: ${{ github.event_name == 'push' }} || ${{ steps.check-comments.outputs.comment-id }} || ${{ steps.check-pr-description.outputs.release == 'true' }}
+        if: github.event_name == 'push' || steps.check-comments.outputs.comment-id != 0 || steps.check-pr-description.outputs.release == 'true'
         id: decision
         env:
           EVENT_NAME: ${{ github.event_name }}
