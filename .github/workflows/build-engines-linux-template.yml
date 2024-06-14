@@ -163,7 +163,6 @@ jobs:
 
       - name: Prepare files for "release" target
         if: ${{ matrix.target.target_path == '' }}
-        working-directory:
         env:
           TARGET_NAME: ${{ matrix.target.name }}
           RELEASE_DIR: ${{ github.workspace }}/target/release
@@ -197,9 +196,9 @@ jobs:
 
       - name: Prepare files for "${{ matrix.target.name }}" target
         if: ${{ matrix.target.target_path != '' }}
-        working-directory: ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release
         env:
           TARGET_NAME: ${{ matrix.target.name }}
+          RELEASE_DIR: ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release
         run: |
           echo "Files in target/release before renaming"
           ls -la $RELEASE_DIR
