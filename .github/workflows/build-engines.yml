@@ -32,11 +32,46 @@ on:
       - 'renovate.json'
 
 jobs:
-  check-event:
-    name: 'test'
+  build-linux:
+    name: Build Engines for Linux
+    uses: ./.github/workflows/build-engines-linux-template.yml
+    with:
+      # commit: ${{ inputs.commit }}
+      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+
+  build-macos-intel:
+    name: Build Engines for Apple Intel
+    uses: ./.github/workflows/build-engines-apple-intel-template.yml
+    with:
+      # commit: ${{ inputs.commit }}
+      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+
+  build-macos-silicon:
+    name: Build Engines for Apple Silicon
+    uses: ./.github/workflows/build-engines-apple-silicon-template.yml
+    with:
+      # commit: ${{ inputs.commit }}
+      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+
+  build-react-native:
+    name: Build Engines for React native
+    uses: ./.github/workflows/build-engines-react-native-template.yml
+    with:
+      # commit: ${{ inputs.commit }}
+      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+
+  build-windows:
+    name: Build Engines for Windows
+    uses: ./.github/workflows/build-engines-windows-template.yml
+    with:
+      # commit: ${{ inputs.commit }}
+      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+
+  is-release-necessary:
+    name: 'Decide if a release of the engines artifacts is necessary'
     runs-on: ubuntu-22.04
     outputs:
-      buildAndRelease: ${{ steps.decideIfBuildAndRelease.outputs.buildAndRelease }}
+      release: ${{ steps.decide.outputs.release }}
     steps:
       - name: Debug Pull Request Event
         if: ${{ github.event_name == 'pull_request' }}
@@ -49,7 +84,7 @@ jobs:
           echo "Pull Request Body contains /integration: ${{ contains(env.PR_BODY, '/integration') }}"
 
       - name: 'Check if the commit is from main or if the PR body contains `/integration` and the PR author has permissions to trigger the workflow'
-        id: decideIfBuildAndRelease
+        id: decide
         env:
           PR_BODY: ${{ github.event.pull_request.body }}
         # See https://docs.github.com/en/graphql/reference/enums
@@ -68,7 +103,7 @@ jobs:
           )
         run: |
           # set value to GitHub output 
-          echo "::set-output name=buildAndRelease::true"
+          echo "::set-output name=release::true"
 
       # Alternative: use comments to trigger the build + release
 
@@ -80,66 +115,21 @@ jobs:
       #     issue-number: ${{ github.event.pull_request.number }}
       #     body-includes: 'ci test all'
 
-  build-linux:
-    needs: check-event
-    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
-    name: Build Engines for Linux
-    uses: ./.github/workflows/build-engines-linux-template.yml
-    with:
-      # commit: ${{ inputs.commit }}
-      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
-
-  build-macos-intel:
-    needs: check-event
-    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
-    name: Build Engines for Apple Intel
-    uses: ./.github/workflows/build-engines-apple-intel-template.yml
-    with:
-      # commit: ${{ inputs.commit }}
-      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
-
-  build-macos-silicon:
-    needs: check-event
-    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
-    name: Build Engines for Apple Silicon
-    uses: ./.github/workflows/build-engines-apple-silicon-template.yml
-    with:
-      # commit: ${{ inputs.commit }}
-      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
-
-  build-react-native:
-    needs: check-event
-    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
-    name: Build Engines for React native
-    uses: ./.github/workflows/build-engines-react-native-template.yml
-    with:
-      # commit: ${{ inputs.commit }}
-      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
-
-  build-windows:
-    needs: check-event
-    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
-    name: Build Engines for Windows
-    uses: ./.github/workflows/build-engines-windows-template.yml
-    with:
-      # commit: ${{ inputs.commit }}
-      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
-
   release-artifacts:
-    needs: check-event
-    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
     # name: 'Release artifacts from branch ${{ github.event.ref }} for commit ${{ inputs.commit }}'
     name: 'Release artifacts from branch ${{ github.event.ref }} for commit 6f3b8db04fa234ab2812fdd27456e9d9590eedb1'
     runs-on: ubuntu-22.04
     # concurrency:
     # group: ${{ inputs.commit }}
-    # TODO uncomment these lines after removing the harcoded run-id in the download-artifact step
-    # needs:
-    #   - build-linux
-    #   - build-macos-intel
-    #   - build-macos-silicon
-    #   - build-react-native
-    #   - build-windows
+    needs:
+      - is-release-necessary
+      # TODO uncomment these lines after removing the harcoded run-id in the download-artifact step
+      - build-linux
+      - build-macos-intel
+      - build-macos-silicon
+      - build-react-native
+      - build-windows
+    if: ${{ needs.is-release-necessary.outputs.release == 'true' }}
 
     env:
       BUCKET_NAME: 'prisma-builds-github-actions'
