@@ -45,8 +45,14 @@ jobs:
       - name: Rename files
         working-directory: ${{ github.workspace }}/target/release/
         run: |
+          echo "Files in target/release before renaming"
+          ls -la .
+
           mv query_engine.dll query_engine.dll.node
           mv query-engine.exe query-engine.exe
+
+          echo "Files in target/release after renaming"
+          ls -la .
 
       - uses: actions/upload-artifact@v4
         with:

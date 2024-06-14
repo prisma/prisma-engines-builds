@@ -45,7 +45,13 @@ jobs:
       - name: Rename files
         working-directory: ${{ github.workspace }}/target/release/
         run: |
+          echo "Files in target/release before renaming"
+          ls -la .
+
           mv libquery_engine.dylib libquery_engine.dylib.node
+
+          echo "Files in target/release after renaming"
+          ls -la .
 
       - uses: actions/upload-artifact@v4
         with:

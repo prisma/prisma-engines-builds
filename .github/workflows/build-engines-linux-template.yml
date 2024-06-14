@@ -207,7 +207,11 @@ jobs:
           echo "Files in target/release before renaming"
           ls -la .
 
-          mv libquery_engine.dylib libquery_engine.dylib.node
+          if [[ "$TARGET_NAME" == *-static-* ]]; then
+            echo "No renaming needed for static targets"
+          else
+            mv libquery_engine.so libquery_engine.so.node
+          fi
 
           echo "Files in target/release after renaming"
           ls -la .
