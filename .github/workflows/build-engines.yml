@@ -233,7 +233,7 @@ jobs:
         run: |
           set -eu
 
-          find . -type f | while read filename; do
+          find . -type f -not -name "*.zip" | while read filename; do
             gzip -c "$filename" > "$filename.gz"
             echo "$filename.gz file created."
           done
