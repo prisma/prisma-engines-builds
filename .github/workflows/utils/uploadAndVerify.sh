@@ -48,20 +48,19 @@ find . -type f | while read filename; do
     gzip -d "$filename" --keep -q
 done
 
-
-# Verify .sha256 and .sig files
+# Verify .sha256 files
 find . -type f | while read filename; do
-    if [[ $filename == *.sha256 ]]; then
     echo "Validating sha256 sum."
     sha256sum -c "$filename"
+done
 
-    elif [[ $filename == *.sig ]]; then
-        # Remove .sig from the file name
-        fileToVerify=$(echo $filename | rev | cut -c5- | rev)
+# Verify .sig files
+find . -type f -name "*.sig" | while read filename; do
+    # Remove .sig from the file name
+    fileToVerify=$(echo $filename | rev | cut -c5- | rev)
 
-        echo "Validating signature $filename for $fileToVerify"
-        gpg --verify "$filename" "$fileToVerify"
-    fi
+    echo "Validating signature $filename for $fileToVerify"
+    gpg --verify "$filename" "$fileToVerify"
 done
 
 # Manual check
