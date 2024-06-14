@@ -102,8 +102,9 @@ jobs:
             github.event.pull_request.author_association == 'CONTRIBUTOR'
           )
         run: |
+          echo "PR body contains /integration and PR author has permissions" 
           # set value to GitHub output 
-          echo "{release}={true}" >> $GITHUB_OUTPUT
+          echo "release=true" >> $GITHUB_OUTPUT
 
       - name: Find "/integration" comment
         uses: peter-evans/find-comment@v3
@@ -117,13 +118,13 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           EVENT_PATH: ${{ github.event_path }}
-          CHECK_COMMENT: ${{ steps.check-comments.outputs.comment-id }}
           CHECK_PR_DESC: ${{ steps.check-pr-description.outputs.release }}
+          CHECK_COMMENT: ${{ steps.check-comments.outputs.comment-id }}
         run: |
           echo "Event Name: $EVENT_NAME"
           echo "Event path: $EVENT_PATH"
-          echo "Check Comments outputs: $CHECK_COMMENT"
           echo "Check PR Description outputs: $CHECK_PR_DESC"
+          echo "Check Comments outputs: $CHECK_COMMENT"
 
       - name: Release is necessary!
         # https://github.com/peter-evans/find-comment/tree/v3/?tab=readme-ov-file#outputs
@@ -133,16 +134,16 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           EVENT_PATH: ${{ github.event_path }}
-          CHECK_COMMENT: ${{ steps.check-comments.outputs.comment-id }}
           CHECK_PR_DESC: ${{ steps.check-pr-description.outputs.release }}
+          CHECK_COMMENT: ${{ steps.check-comments.outputs.comment-id }}
         run: |
           echo "Event Name: $EVENT_NAME"
           echo "Event path: $EVENT_PATH"
-          echo "Check Comments outputs: $CHECK_COMMENT"
           echo "Check PR Description outputs: $CHECK_PR_DESC"
+          echo "Check Comments outputs: $CHECK_COMMENT"
 
           echo "Release is necessary"
-          echo "{release}={true}" >> $GITHUB_OUTPUT
+          echo "release=true" >> $GITHUB_OUTPUT
 
   release-artifacts:
     # name: 'Release artifacts from branch ${{ github.event.ref }} for commit ${{ inputs.commit }}'
