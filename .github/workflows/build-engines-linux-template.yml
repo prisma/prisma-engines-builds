@@ -189,10 +189,10 @@ jobs:
         with:
           name: '${{ matrix.target.name }}'
           path: |
-            ${{ github.workspace }}/target/release/libquery_engine.so.node
-            ${{ github.workspace }}/target/release/schema-engine
-            ${{ github.workspace }}/target/release/query-engine
-            ${{ github.workspace }}/target/release/prisma-fmt
+            ${{ github.workspace }}/engines-artifacts/libquery_engine.so.node
+            ${{ github.workspace }}/engines-artifacts/schema-engine
+            ${{ github.workspace }}/engines-artifacts/query-engine
+            ${{ github.workspace }}/engines-artifacts/prisma-fmt
 
       - name: Prepare files for "${{ matrix.target.name }}" target
         if: ${{ matrix.target.target_path != '' }}
@@ -222,7 +222,7 @@ jobs:
         with:
           name: ${{ matrix.target.name }}
           path: |
-            ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release/libquery_engine.so.node
-            ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release/schema-engine
-            ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release/query-engine
-            ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release/prisma-fmt
+            ${{ github.workspace }}/engines-artifacts/libquery_engine.so.node
+            ${{ github.workspace }}/engines-artifacts/schema-engine
+            ${{ github.workspace }}/engines-artifacts/query-engine
+            ${{ github.workspace }}/engines-artifacts/prisma-fmt
