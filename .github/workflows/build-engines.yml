@@ -123,10 +123,10 @@ jobs:
           echo "Event Name: $EVENT_NAME"
           echo "Event path: $EVENT_PATH"
           echo "Check Comments outputs: $CHECK_COMMENT"
-          echo "Check PR Description outputs: $OUTPUTS_CHECK_PR_DESC"
+          echo "Check PR Description outputs: $CHECK_PR_DESC"
 
       - name: Decide if a release is necessary
-        if: ${{ github.event_name == 'push'  }} || ${{ steps.check-comments.outputs.comment-id != ''}} || ${{ needs.check-pr-description.outputs.release == 'true' }}
+        if: ${{ github.event_name == 'push' }} || ${{ steps.check-comments.outputs.comment-id }} || ${{ steps.check-pr-description.outputs.release == 'true' }}
         id: decision
         env:
           EVENT_NAME: ${{ github.event_name }}
