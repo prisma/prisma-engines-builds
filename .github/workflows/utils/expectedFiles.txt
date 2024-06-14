@@ -1,6 +1,5 @@
 ./darwin
 ./darwin-arm64
-./darwin-arm64/.finished
 ./darwin-arm64/libquery_engine.dylib.node.gz
 ./darwin-arm64/libquery_engine.dylib.node.gz.sha256
 ./darwin-arm64/libquery_engine.dylib.node.gz.sig
@@ -21,7 +20,6 @@
 ./darwin-arm64/schema-engine.gz.sig
 ./darwin-arm64/schema-engine.sha256
 ./darwin-arm64/schema-engine.sig
-./darwin/.finished
 ./darwin/libquery_engine.dylib.node.gz
 ./darwin/libquery_engine.dylib.node.gz.sha256
 ./darwin/libquery_engine.dylib.node.gz.sig
@@ -43,7 +41,6 @@
 ./darwin/schema-engine.sha256
 ./darwin/schema-engine.sig
 ./debian-openssl-1.0.x
-./debian-openssl-1.0.x/.finished
 ./debian-openssl-1.0.x/libquery_engine.so.node.gz
 ./debian-openssl-1.0.x/libquery_engine.so.node.gz.sha256
 ./debian-openssl-1.0.x/libquery_engine.so.node.gz.sig
@@ -65,7 +62,6 @@
 ./debian-openssl-1.0.x/schema-engine.sha256
 ./debian-openssl-1.0.x/schema-engine.sig
 ./debian-openssl-1.1.x
-./debian-openssl-1.1.x/.finished
 ./debian-openssl-1.1.x/libquery_engine.so.node.gz
 ./debian-openssl-1.1.x/libquery_engine.so.node.gz.sha256
 ./debian-openssl-1.1.x/libquery_engine.so.node.gz.sig
@@ -87,7 +83,6 @@
 ./debian-openssl-1.1.x/schema-engine.sha256
 ./debian-openssl-1.1.x/schema-engine.sig
 ./debian-openssl-3.0.x
-./debian-openssl-3.0.x/.finished
 ./debian-openssl-3.0.x/libquery_engine.so.node.gz
 ./debian-openssl-3.0.x/libquery_engine.so.node.gz.sha256
 ./debian-openssl-3.0.x/libquery_engine.so.node.gz.sig
@@ -109,7 +104,6 @@
 ./debian-openssl-3.0.x/schema-engine.sha256
 ./debian-openssl-3.0.x/schema-engine.sig
 ./linux-arm64-openssl-1.0.x
-./linux-arm64-openssl-1.0.x/.finished
 ./linux-arm64-openssl-1.0.x/libquery_engine.so.node.gz
 ./linux-arm64-openssl-1.0.x/libquery_engine.so.node.gz.sha256
 ./linux-arm64-openssl-1.0.x/libquery_engine.so.node.gz.sig
@@ -131,7 +125,6 @@
 ./linux-arm64-openssl-1.0.x/schema-engine.sha256
 ./linux-arm64-openssl-1.0.x/schema-engine.sig
 ./linux-arm64-openssl-1.1.x
-./linux-arm64-openssl-1.1.x/.finished
 ./linux-arm64-openssl-1.1.x/libquery_engine.so.node.gz
 ./linux-arm64-openssl-1.1.x/libquery_engine.so.node.gz.sha256
 ./linux-arm64-openssl-1.1.x/libquery_engine.so.node.gz.sig
@@ -153,7 +146,6 @@
 ./linux-arm64-openssl-1.1.x/schema-engine.sha256
 ./linux-arm64-openssl-1.1.x/schema-engine.sig
 ./linux-arm64-openssl-3.0.x
-./linux-arm64-openssl-3.0.x/.finished
 ./linux-arm64-openssl-3.0.x/libquery_engine.so.node.gz
 ./linux-arm64-openssl-3.0.x/libquery_engine.so.node.gz.sha256
 ./linux-arm64-openssl-3.0.x/libquery_engine.so.node.gz.sig
@@ -176,7 +168,6 @@
 ./linux-arm64-openssl-3.0.x/schema-engine.sig
 ./linux-musl
 ./linux-musl-arm64-openssl-1.1.x
-./linux-musl-arm64-openssl-1.1.x/.finished
 ./linux-musl-arm64-openssl-1.1.x/libquery_engine.so.node.gz
 ./linux-musl-arm64-openssl-1.1.x/libquery_engine.so.node.gz.sha256
 ./linux-musl-arm64-openssl-1.1.x/libquery_engine.so.node.gz.sig
@@ -198,7 +189,6 @@
 ./linux-musl-arm64-openssl-1.1.x/schema-engine.sha256
 ./linux-musl-arm64-openssl-1.1.x/schema-engine.sig
 ./linux-musl-arm64-openssl-3.0.x
-./linux-musl-arm64-openssl-3.0.x/.finished
 ./linux-musl-arm64-openssl-3.0.x/libquery_engine.so.node.gz
 ./linux-musl-arm64-openssl-3.0.x/libquery_engine.so.node.gz.sha256
 ./linux-musl-arm64-openssl-3.0.x/libquery_engine.so.node.gz.sig
@@ -220,7 +210,6 @@
 ./linux-musl-arm64-openssl-3.0.x/schema-engine.sha256
 ./linux-musl-arm64-openssl-3.0.x/schema-engine.sig
 ./linux-musl-openssl-3.0.x
-./linux-musl-openssl-3.0.x/.finished
 ./linux-musl-openssl-3.0.x/libquery_engine.so.node.gz
 ./linux-musl-openssl-3.0.x/libquery_engine.so.node.gz.sha256
 ./linux-musl-openssl-3.0.x/libquery_engine.so.node.gz.sig
@@ -241,7 +230,6 @@
 ./linux-musl-openssl-3.0.x/schema-engine.gz.sig
 ./linux-musl-openssl-3.0.x/schema-engine.sha256
 ./linux-musl-openssl-3.0.x/schema-engine.sig
-./linux-musl/.finished
 ./linux-musl/libquery_engine.so.node.gz
 ./linux-musl/libquery_engine.so.node.gz.sha256
 ./linux-musl/libquery_engine.so.node.gz.sig
@@ -263,7 +251,6 @@
 ./linux-musl/schema-engine.sha256
 ./linux-musl/schema-engine.sig
 ./linux-static-arm64
-./linux-static-arm64/.finished
 ./linux-static-arm64/prisma-fmt.gz
 ./linux-static-arm64/prisma-fmt.gz.sha256
 ./linux-static-arm64/prisma-fmt.gz.sig
@@ -280,7 +267,6 @@
 ./linux-static-arm64/schema-engine.sha256
 ./linux-static-arm64/schema-engine.sig
 ./linux-static-x64
-./linux-static-x64/.finished
 ./linux-static-x64/prisma-fmt.gz
 ./linux-static-x64/prisma-fmt.gz.sha256
 ./linux-static-x64/prisma-fmt.gz.sig
@@ -297,12 +283,10 @@
 ./linux-static-x64/schema-engine.sha256
 ./linux-static-x64/schema-engine.sig
 ./react-native
-./react-native/.finished
 ./react-native/binaries.zip
 ./react-native/binaries.zip.sha256
 ./react-native/binaries.zip.sig
 ./rhel-openssl-1.0.x
-./rhel-openssl-1.0.x/.finished
 ./rhel-openssl-1.0.x/libquery_engine.so.node.gz
 ./rhel-openssl-1.0.x/libquery_engine.so.node.gz.sha256
 ./rhel-openssl-1.0.x/libquery_engine.so.node.gz.sig
@@ -324,7 +308,6 @@
 ./rhel-openssl-1.0.x/schema-engine.sha256
 ./rhel-openssl-1.0.x/schema-engine.sig
 ./rhel-openssl-1.1.x
-./rhel-openssl-1.1.x/.finished
 ./rhel-openssl-1.1.x/libquery_engine.so.node.gz
 ./rhel-openssl-1.1.x/libquery_engine.so.node.gz.sha256
 ./rhel-openssl-1.1.x/libquery_engine.so.node.gz.sig
@@ -346,7 +329,6 @@
 ./rhel-openssl-1.1.x/schema-engine.sha256
 ./rhel-openssl-1.1.x/schema-engine.sig
 ./rhel-openssl-3.0.x
-./rhel-openssl-3.0.x/.finished
 ./rhel-openssl-3.0.x/libquery_engine.so.node.gz
 ./rhel-openssl-3.0.x/libquery_engine.so.node.gz.sha256
 ./rhel-openssl-3.0.x/libquery_engine.so.node.gz.sig
@@ -368,7 +350,6 @@
 ./rhel-openssl-3.0.x/schema-engine.sha256
 ./rhel-openssl-3.0.x/schema-engine.sig
 ./windows
-./windows/.finished
 ./windows/prisma-fmt.exe.gz
 ./windows/prisma-fmt.exe.gz.sha256
 ./windows/prisma-fmt.exe.gz.sig
