@@ -11,16 +11,13 @@ if [ -z "$LOCAL_DIR_PATH" ]; then
     exit 1
 fi
 
-mkdir $LOCAL_DIR_PATH
-
-cd engines-artifacts
-
 echo "Upload to R2"
+cd engines-artifacts
 aws s3 sync . $DESTINATION_TARGET_PATH --no-progress --exclude "*" --include "*.gz" --include "*.sha256" --include "*.sig"
 
-cd "../$LOCAL_DIR_PATH"
-
 echo "Downloading files..."
+mkdir $LOCAL_DIR_PATH
+cd "../$LOCAL_DIR_PATH"
 aws s3 sync $DESTINATION_TARGET_PATH . --no-progress
 
 echo "Verifing downloaded files..."
@@ -65,6 +62,39 @@ find . -type f | while read filename; do
         gpg --verify "$filename" "$fileToVerify"
     fi
 done
+
+# Manual check
+# 
+# Set PROD env vars
+# mkdir engines-artifacts-from-prod
+# Download the artifacts from the S3 bucket
+# aws s3 sync s3://prisma-builds/all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1 engines-artifacts-from-prod/
+# Print the files and save the output to a file
+# cd engines-artifacts-from-prod
+# find . | sort > ../expectedFiles.txt
+# 
+# cd ..
+# 
+# Set DEV env vars
+# mkdir engines-artifacts-from-dev
+# Download the artifacts from the S3 bucket
+# aws s3 sync s3://prisma-builds-github-actions/all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1 engines-artifacts-from-dev/
+# Print the files and save the output to a file
+# cd engines-artifacts-from-dev
+# find . | sort > ../currentFiles.txt
+
+# Automated check
+# expectedFiles.txt is in the same directory as this script
+
+echo "Create list of files"
+find . | sort > ../currentFiles.txt
+cd ..
+
+pwd
+ls
+
+echo "Comparing expectedFiles.txt vs currentFiles.txt"
+diff <(cat expectedFiles.txt) <(cd cat currentFiles.txt)
 
 echo "Upload .finished marker file"
 touch .finished

@@ -11,11 +11,6 @@ on:
 jobs:
   build:
     name: '${{ matrix.target.name }} for commit ${{ inputs.commit }}'
-    # env:
-    #   # default build config
-    #   SQLITE_MAX_VARIABLE_NUMBER: 250000
-    #   SQLITE_MAX_EXPR_DEPTH: 10000
-
     runs-on: ubuntu-22.04
 
     strategy:
@@ -158,17 +153,6 @@ jobs:
           # store command in GitHub output
           echo "COMMAND=$command" >> "$GITHUB_OUTPUT"
 
-      # - name: Construct dummy build command
-      #   # id: construct_build_command
-      #   if: false
-      #   env:
-      #     TARGET_NAME: ${{ matrix.target.name }}
-      #     IMAGE: ${{ matrix.target.image }}
-      #     TARGET_STRING: ${{ matrix.target.target_string }}
-      #     FEATURES_STRING: ${{ matrix.target.features_string }}
-      #   run: |
-      #     mkdir -p target/release && touch target/release/libquery_engine.so && touch target/release/schema-engine && touch target/release/query-engine && touch target/release/prisma-fmt
-
       - name: Show Build Command
         env:
           COMMAND: ${{ steps.construct_build_command.outputs.COMMAND }}"
@@ -188,7 +172,7 @@ jobs:
           ls -la $RELEASE_DIR
 
           echo "Copying files to engines-artifacts"
-          cp $RELEASE_DIR/ engines-artifacts
+          cp -r $RELEASE_DIR/ engines-artifacts
 
           echo "Rename libquery_engine.so to libquery_engine.so.node for non-static targets"
           if [[ "$TARGET_NAME" == *-static-* ]]; then
@@ -221,7 +205,7 @@ jobs:
           ls -la $RELEASE_DIR
 
           echo "Copying files to engines-artifacts"
-          cp $RELEASE_DIR/ engines-artifacts
+          cp -r $RELEASE_DIR/ engines-artifacts
 
           echo "Rename libquery_engine.so to libquery_engine.so.node for non-static targets"
           if [[ "$TARGET_NAME" == *-static-* ]]; then
