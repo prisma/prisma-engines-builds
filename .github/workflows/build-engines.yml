@@ -115,11 +115,9 @@ jobs:
 
       - name: Debug Event
         env:
-          EVENT: ${{ github.event }}
           EVENT_NAME: ${{ github.event_name }}
-          EVENT_PATH: ${{ github.event_path}}
+          EVENT_PATH: ${{ github.event_path }}
         run: |
-          echo "Event: $EVENT"
           echo "Event Name: $EVENT_NAME"
           echo "Event path: $EVENT_PATH"
 
