@@ -1,16 +1,88 @@
 name: Build Engines
 # run-name: Build Engines for ${{ inputs.commit }}
 run-name: Build Engines for 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+
+# Run on `push` only for main, if not it will trigger `push` & `pull_request` on PRs at the same time
 on:
+  push:
+    branches:
+      - main
+      - '*.*.x'
+    paths-ignore:
+      - '!.github/workflows/build-engines*'
+      - '.github/**'
+      - '.buildkite/**'
+      - '*.md'
+      - 'LICENSE'
+      - 'CODEOWNERS'
+      - 'renovate.json'
   workflow_dispatch:
     inputs:
       commit:
         description: 'Commit to build (from prisma-engines)'
         required: false
   pull_request:
+    paths-ignore:
+      - '!.github/workflows/build-engines*'
+      - '.github/**'
+      - '.buildkite/**'
+      - '*.md'
+      - 'LICENSE'
+      - 'CODEOWNERS'
+      - 'renovate.json'
 
 jobs:
+  check-event:
+    name: 'test'
+    runs-on: ubuntu-22.04
+    outputs:
+      buildAndRelease: ${{ steps.decideIfBuildAndRelease.outputs.buildAndRelease }}
+    steps:
+      - name: Debug Pull Request Event
+        if: ${{ github.event_name == 'pull_request' }}
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          echo "Pull Request: ${{ github.event.pull_request.number }}"
+          echo "Pull Request Author: ${{ github.event.pull_request.user.login }}"
+          echo "Pull Request Author Association: ${{ github.event.pull_request.author_association }}"
+          echo "Pull Request Body contains /integration: ${{ contains(env.PR_BODY, '/integration') }}"
+
+      - name: 'Check if the commit is from main or if the PR body contains `/integration` and the PR author has permissions to trigger the workflow'
+        id: decideIfBuildAndRelease
+        env:
+          PR_BODY: ${{ github.event.pull_request.body }}
+        # See https://docs.github.com/en/graphql/reference/enums
+        # https://michaelheap.com/github-actions-check-permission/
+        # Check if
+        # - the PR body contains `/integration`
+        # - the PR author has permissions to trigger the workflow (must be part of the org or a collaborator)
+        if: |
+          github.event_name == 'pull_request' &&
+          contains(env.PR_BODY, '/integration') && 
+          (
+            github.event.pull_request.author_association == 'OWNER' ||
+            github.event.pull_request.author_association == 'MEMBER' ||
+            github.event.pull_request.author_association == 'COLLABORATOR' ||
+            github.event.pull_request.author_association == 'CONTRIBUTOR'
+          )
+        run: |
+          # set value to GitHub output 
+          echo "::set-output name=buildAndRelease::true"
+
+      # Alternative: use comments to trigger the build + release
+
+      # - name: Find "ci test all" comment
+      #   uses: peter-evans/find-comment@v3
+      #   id: findTestAllComment
+      #   if: ${{ github.event_name == 'pull_request' }}
+      #   with:
+      #     issue-number: ${{ github.event.pull_request.number }}
+      #     body-includes: 'ci test all'
+
   build-linux:
+    needs: check-event
+    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
     name: Build Engines for Linux
     uses: ./.github/workflows/build-engines-linux-template.yml
     with:
@@ -18,6 +90,8 @@ jobs:
       commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 
   build-macos-intel:
+    needs: check-event
+    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
     name: Build Engines for Apple Intel
     uses: ./.github/workflows/build-engines-apple-intel-template.yml
     with:
@@ -25,6 +99,8 @@ jobs:
       commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 
   build-macos-silicon:
+    needs: check-event
+    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
     name: Build Engines for Apple Silicon
     uses: ./.github/workflows/build-engines-apple-silicon-template.yml
     with:
@@ -32,6 +108,8 @@ jobs:
       commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 
   build-react-native:
+    needs: check-event
+    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
     name: Build Engines for React native
     uses: ./.github/workflows/build-engines-react-native-template.yml
     with:
@@ -39,6 +117,8 @@ jobs:
       commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 
   build-windows:
+    needs: check-event
+    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
     name: Build Engines for Windows
     uses: ./.github/workflows/build-engines-windows-template.yml
     with:
@@ -46,6 +126,8 @@ jobs:
       commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
 
   release-artifacts:
+    needs: check-event
+    if: ${{ needs.check-event.outputs.buildAndRelease == 'true' }}
     # name: 'Release artifacts from branch ${{ github.event.ref }} for commit ${{ inputs.commit }}'
     name: 'Release artifacts from branch ${{ github.event.ref }} for commit 6f3b8db04fa234ab2812fdd27456e9d9590eedb1'
     runs-on: ubuntu-22.04
@@ -78,9 +160,9 @@ jobs:
           # A previous run ID can be specified, to avoid the build step
           # First disable the build step, then specify the run ID
           # The github-token is mandatory for this to work
-          # https://github.com/prisma/prisma-engines-builds/actions/runs/9504695971
+          # https://github.com/prisma/prisma-engines-builds/actions/runs/9513891902
           # TODO comment out these 2 lines
-          run-id: 9504695971
+          run-id: 9513891902
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'R2: Check if artifacts were already built and uploaded before via `.finished` file'

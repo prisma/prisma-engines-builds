@@ -158,16 +158,16 @@ jobs:
           # store command in GitHub output
           echo "COMMAND=$command" >> "$GITHUB_OUTPUT"
 
-      - name: Construct dummy build command
-        # id: construct_build_command
-        if: false
-        env:
-          TARGET_NAME: ${{ matrix.target.name }}
-          IMAGE: ${{ matrix.target.image }}
-          TARGET_STRING: ${{ matrix.target.target_string }}
-          FEATURES_STRING: ${{ matrix.target.features_string }}
-        run: |
-          mkdir -p target/release && touch target/release/libquery_engine.dylib && touch target/release/schema-engine && touch target/release/query-engine && touch target/release/prisma-fmt
+      # - name: Construct dummy build command
+      #   # id: construct_build_command
+      #   if: false
+      #   env:
+      #     TARGET_NAME: ${{ matrix.target.name }}
+      #     IMAGE: ${{ matrix.target.image }}
+      #     TARGET_STRING: ${{ matrix.target.target_string }}
+      #     FEATURES_STRING: ${{ matrix.target.features_string }}
+      #   run: |
+      #     mkdir -p target/release && touch target/release/libquery_engine.so && touch target/release/schema-engine && touch target/release/query-engine && touch target/release/prisma-fmt
 
       - name: Show Build Command
         env:
@@ -177,14 +177,18 @@ jobs:
       - name: Execute Build command
         run: ${{ steps.construct_build_command.outputs.command }}
 
-      - name: Rename files
+      - name: Rename files for "release" target
         if: ${{ matrix.target.target_path == '' }}
         working-directory: ${{ github.workspace }}/target/release/
         run: |
           echo "Files in target/release before renaming"
           ls -la .
 
-          mv libquery_engine.dylib libquery_engine.dylib.node
+          if [[ "$TARGET_NAME" == *-static-* ]]; then
+            echo "No renaming needed for static targets"
+          else
+            mv libquery_engine.so libquery_engine.so.node
+          fi
 
           echo "Files in target/release after renaming"
           ls -la .
@@ -195,12 +199,12 @@ jobs:
         with:
           name: '${{ matrix.target.name }}'
           path: |
-            ${{ github.workspace }}/target/release/libquery_engine.dylib
+            ${{ github.workspace }}/target/release/libquery_engine.so.node
             ${{ github.workspace }}/target/release/schema-engine
             ${{ github.workspace }}/target/release/query-engine
             ${{ github.workspace }}/target/release/prisma-fmt
 
-      - name: Rename files
+      - name: Rename files for "${{ matrix.target.name }}" target
         if: ${{ matrix.target.target_path != '' }}
         working-directory: ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release
         run: |
@@ -222,7 +226,7 @@ jobs:
         with:
           name: ${{ matrix.target.name }}
           path: |
-            ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release/libquery_engine.dylib
+            ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release/libquery_engine.so.node
             ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release/schema-engine
             ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release/query-engine
             ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release/prisma-fmt
