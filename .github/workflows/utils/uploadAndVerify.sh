@@ -90,11 +90,8 @@ echo "Create list of files"
 find . | sort > ../currentFiles.txt
 cd ..
 
-pwd
-ls
-
 echo "Comparing expectedFiles.txt vs currentFiles.txt"
-diff -c expectedFiles.txt currentFiles.txt
+diff -c .github/workflows/utils/expectedFiles.txt currentFiles.txt
 
 echo "Upload .finished marker file"
 touch .finished
