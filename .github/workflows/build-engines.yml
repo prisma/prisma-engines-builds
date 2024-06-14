@@ -113,16 +113,16 @@ jobs:
           issue-number: ${{ github.event.pull_request.number }}
           body-includes: '/integration'
 
-      - name: Debug Event
+      - name: Debug event & outputs
         env:
           EVENT_NAME: ${{ github.event_name }}
           EVENT_PATH: ${{ github.event_path }}
-          OUTPUTS_CHECK_COMMENT: ${{ steps.check-comments.outputs }}
-          OUTPUTS_CHECK_PR_DESC: ${{ steps.check-pr-description.outputs.release }}
+          CHECK_COMMENT: ${{ steps.check-comments.outputs.comment-id }}
+          CHECK_PR_DESC: ${{ steps.check-pr-description.outputs.release }}
         run: |
           echo "Event Name: $EVENT_NAME"
           echo "Event path: $EVENT_PATH"
-          echo "Check Comments outputs: $OUTPUTS_CHECK_COMMENT"
+          echo "Check Comments outputs: $CHECK_COMMENT"
           echo "Check PR Description outputs: $OUTPUTS_CHECK_PR_DESC"
 
       - name: Decide if a release is necessary
@@ -131,13 +131,13 @@ jobs:
         env:
           EVENT_NAME: ${{ github.event_name }}
           EVENT_PATH: ${{ github.event_path }}
-          OUTPUTS_CHECK_COMMENT: ${{ steps.check-comments.outputs }}
-          OUTPUTS_CHECK_PR_DESC: ${{ steps.check-pr-description.outputs.release }}
+          CHECK_COMMENT: ${{ steps.check-comments.outputs.comment-id }}
+          CHECK_PR_DESC: ${{ steps.check-pr-description.outputs.release }}
         run: |
           echo "Event Name: $EVENT_NAME"
           echo "Event path: $EVENT_PATH"
-          echo "Check Comments outputs: $OUTPUTS_CHECK_COMMENT"
-          echo "Check PR Description outputs: $OUTPUTS_CHECK_PR_DESC"
+          echo "Check Comments outputs: $CHECK_COMMENT"
+          echo "Check PR Description outputs: $CHECK_PR_DESC"
 
           echo "Release is necessary"
           echo "{release}={true}" >> $GITHUB_OUTPUT
