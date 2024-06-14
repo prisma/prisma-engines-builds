@@ -21,6 +21,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        # ⚠️ The target names are used to dtermine the directory name when uploaded to the buckets.
+        # Do not change them.
         target:
           # Linux Glibc
           - name: 'rhel-openssl-1.0.x'
@@ -39,6 +41,8 @@ jobs:
             target_path: ''
             features_string: ''
           # Linux Musl
+          # A better name would be "linux-musl-openssl-1.1.x"
+          # But we keep the old name for compatibility reasons
           - name: 'linux-musl'
             image: 'prismagraphql/build:alpine-libssl1.1.x'
             target_string: ''
@@ -177,10 +181,16 @@ jobs:
         if: ${{ matrix.target.target_path == '' }}
         working-directory: ${{ github.workspace }}/target/release/
         run: |
+          echo "Files in target/release before renaming"
+          ls -la .
+
           mv libquery_engine.dylib libquery_engine.dylib.node
 
-      # Upload for target "release"
-      - uses: actions/upload-artifact@v4
+          echo "Files in target/release after renaming"
+          ls -la .
+
+      - name: Upload artifacts for "release" target
+        uses: actions/upload-artifact@v4
         if: ${{ matrix.target.target_path == '' }}
         with:
           name: '${{ matrix.target.name }}'
@@ -194,10 +204,16 @@ jobs:
         if: ${{ matrix.target.target_path != '' }}
         working-directory: ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release
         run: |
+          echo "Files in target/release before renaming"
+          ls -la .
+
           mv libquery_engine.dylib libquery_engine.dylib.node
 
-      # Upload for target from matrix
-      - uses: actions/upload-artifact@v4
+          echo "Files in target/release after renaming"
+          ls -la .
+
+      - name: Upload artifacts for "${{ matrix.target.name }}" target
+        uses: actions/upload-artifact@v4
         if: ${{ matrix.target.target_path != '' }}
         with:
           name: ${{ matrix.target.name }}
