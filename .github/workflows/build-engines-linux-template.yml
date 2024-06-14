@@ -180,6 +180,8 @@ jobs:
       - name: Rename files for "release" target
         if: ${{ matrix.target.target_path == '' }}
         working-directory: ${{ github.workspace }}/target/release/
+        env:
+          TARGET_NAME: ${{ matrix.target.name }}
         run: |
           echo "Files in target/release before renaming"
           ls -la .
@@ -187,7 +189,7 @@ jobs:
           if [[ "$TARGET_NAME" == *-static-* ]]; then
             echo "No renaming needed for static targets"
           else
-            mv libquery_engine.so libquery_engine.so.node
+            cp libquery_engine.so libquery_engine.so.node
           fi
 
           echo "Files in target/release after renaming"
@@ -207,6 +209,8 @@ jobs:
       - name: Rename files for "${{ matrix.target.name }}" target
         if: ${{ matrix.target.target_path != '' }}
         working-directory: ${{ github.workspace }}/target/${{ matrix.target.target_path }}/release
+        env:
+          TARGET_NAME: ${{ matrix.target.name }}
         run: |
           echo "Files in target/release before renaming"
           ls -la .
@@ -214,7 +218,7 @@ jobs:
           if [[ "$TARGET_NAME" == *-static-* ]]; then
             echo "No renaming needed for static targets"
           else
-            mv libquery_engine.so libquery_engine.so.node
+            cp libquery_engine.so libquery_engine.so.node
           fi
 
           echo "Files in target/release after renaming"
