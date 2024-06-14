@@ -13,11 +13,12 @@ fi
 
 echo "Upload to R2"
 cd engines-artifacts
-aws s3 sync . $DESTINATION_TARGET_PATH --no-progress --exclude "*" --include "*.gz" --include "*.sha256" --include "*.sig"
+aws s3 sync . $DESTINATION_TARGET_PATH --no-progress --exclude "*" --include "*.gz" --include "*.zip" --include "*.sha256" --include "*.sig"
+cd ".."
 
 echo "Downloading files..."
 mkdir $LOCAL_DIR_PATH
-cd "../$LOCAL_DIR_PATH"
+cd $LOCAL_DIR_PATH
 aws s3 sync $DESTINATION_TARGET_PATH . --no-progress
 
 echo "Verifing downloaded files..."
