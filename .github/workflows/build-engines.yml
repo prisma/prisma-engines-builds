@@ -154,11 +154,11 @@ jobs:
     needs:
       - is-release-necessary
       # TODO uncomment these lines after removing the harcoded run-id in the download-artifact step
-      - build-linux
-      - build-macos-intel
-      - build-macos-silicon
-      - build-react-native
-      - build-windows
+      # - build-linux
+      # - build-macos-intel
+      # - build-macos-silicon
+      # - build-react-native
+      # - build-windows
     if: ${{ needs.is-release-necessary.outputs.release == 'true' }}
 
     env:
