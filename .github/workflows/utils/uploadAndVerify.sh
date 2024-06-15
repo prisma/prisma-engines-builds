@@ -15,7 +15,6 @@ echo "Upload to R2"
 cd engines-artifacts
 aws s3 sync . $DESTINATION_TARGET_PATH --no-progress \
     --exclude "*" \
-    --include "*.node" \
     --include "*.gz" \
     --include "*.zip" \
     --include "*.sha256" \
