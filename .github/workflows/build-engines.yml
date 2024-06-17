@@ -1,6 +1,5 @@
 name: Build Engines
-# run-name: Build Engines for ${{ inputs.commit }}
-run-name: Build Engines for 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+run-name: Build Engines for ${{ inputs.commit }}
 
 # Run on `push` only for main, if not it will trigger `push` & `pull_request` on PRs at the same time
 on:
@@ -36,36 +35,31 @@ jobs:
     name: Build Engines for Linux
     uses: ./.github/workflows/build-engines-linux-template.yml
     with:
-      # commit: ${{ inputs.commit }}
-      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+      commit: ${{ inputs.commit }}
 
   build-macos-intel:
     name: Build Engines for Apple Intel
     uses: ./.github/workflows/build-engines-apple-intel-template.yml
     with:
-      # commit: ${{ inputs.commit }}
-      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+      commit: ${{ inputs.commit }}
 
   build-macos-silicon:
     name: Build Engines for Apple Silicon
     uses: ./.github/workflows/build-engines-apple-silicon-template.yml
     with:
-      # commit: ${{ inputs.commit }}
-      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+      commit: ${{ inputs.commit }}
 
   build-react-native:
     name: Build Engines for React native
     uses: ./.github/workflows/build-engines-react-native-template.yml
     with:
-      # commit: ${{ inputs.commit }}
-      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+      commit: ${{ inputs.commit }}
 
   build-windows:
     name: Build Engines for Windows
     uses: ./.github/workflows/build-engines-windows-template.yml
     with:
-      # commit: ${{ inputs.commit }}
-      commit: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
+      commit: ${{ inputs.commit }}
 
   is-release-necessary:
     name: 'Decide if a release of the engines artifacts is necessary'
@@ -146,27 +140,23 @@ jobs:
           echo "release=true" >> $GITHUB_OUTPUT
 
   release-artifacts:
-    # name: 'Release artifacts from branch ${{ github.event.ref }} for commit ${{ inputs.commit }}'
-    name: 'Release artifacts from branch ${{ github.event.ref }} for commit 6f3b8db04fa234ab2812fdd27456e9d9590eedb1'
+    name: 'Release artifacts from branch ${{ github.event.ref }} for commit ${{ inputs.commit }}'
     runs-on: ubuntu-22.04
-    # concurrency:
-    # group: ${{ inputs.commit }}
+    concurrency:
+      group: ${{ inputs.commit }}
     needs:
       - is-release-necessary
-      # TODO uncomment these lines after removing the harcoded run-id in the download-artifact step
-      # - build-linux
-      # - build-macos-intel
-      # - build-macos-silicon
-      # - build-react-native
-      # - build-windows
+      - build-linux
+      - build-macos-intel
+      - build-macos-silicon
+      - build-react-native
+      - build-windows
     if: ${{ needs.is-release-necessary.outputs.release == 'true' }}
 
     env:
       BUCKET_NAME: 'prisma-builds-github-actions'
-      # PRISMA_ENGINES_COMMIT_SHA: ${{ inputs.commit }}
-      # DESTINATION_TARGET_PATH: 's3://prisma-builds-github-actions/all_commits/${{ inputs.commit }}'
-      PRISMA_ENGINES_COMMIT_SHA: 6f3b8db04fa234ab2812fdd27456e9d9590eedb1
-      DESTINATION_TARGET_PATH: 's3://prisma-builds-github-actions/all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1'
+      PRISMA_ENGINES_COMMIT_SHA: ${{ inputs.commit }}
+      DESTINATION_TARGET_PATH: 's3://prisma-builds-github-actions/all_commits/${{ inputs.commit }}'
 
     steps:
       # Because we need the scripts
@@ -181,26 +171,12 @@ jobs:
           # First disable the build step, then specify the run ID
           # The github-token is mandatory for this to work
           # https://github.com/prisma/prisma-engines-builds/actions/runs/9526334324
-          # TODO comment out these 2 lines
-          run-id: 9526334324
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-
-      # TODO REMOVE!
-      - name: 'TODO: REMOVE - R2: DELETE files'
-        env:
-          # FILE_PATH: 'all_commits/${{ inputs.commit }}/.finished'
-          FILE_PATH: 'all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1/.finished'
-          AWS_DEFAULT_REGION: 'auto'
-          AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
-          AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
-        working-directory: .github/workflows/utils
-        run: aws s3 rm $DESTINATION_TARGET_PATH --recursive
+          # run-id: 9526334324
+          # github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'R2: Check if artifacts were already built and uploaded before via `.finished` file'
         env:
-          # FILE_PATH: 'all_commits/${{ inputs.commit }}/.finished'
-          FILE_PATH: 'all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1/.finished'
+          FILE_PATH: 'all_commits/${{ inputs.commit }}/.finished'
           AWS_DEFAULT_REGION: 'auto'
           AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
@@ -210,8 +186,7 @@ jobs:
 
       - name: 'S3: Check if artifacts were already built and uploaded before via `.finished` file'
         env:
-          # FILE_PATH: 'all_commits/${{ inputs.commit }}/.finished'
-          FILE_PATH: 'all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1/.finished'
+          FILE_PATH: 'all_commits/${{ inputs.commit }}/.finished'
           AWS_DEFAULT_REGION: 'eu-west-1'
           AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
