@@ -185,6 +185,18 @@ jobs:
           run-id: 9526334324
           github-token: ${{ secrets.GITHUB_TOKEN }}
 
+      # TODO REMOVE!
+      - name: 'TODO: REMOVE - R2: DELETE files'
+        env:
+          # FILE_PATH: 'all_commits/${{ inputs.commit }}/.finished'
+          FILE_PATH: 'all_commits/6f3b8db04fa234ab2812fdd27456e9d9590eedb1/.finished'
+          AWS_DEFAULT_REGION: 'auto'
+          AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
+          AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
+        working-directory: .github/workflows/utils
+        run: aws s3 rm $DESTINATION_TARGET_PATH --recursive
+
       - name: 'R2: Check if artifacts were already built and uploaded before via `.finished` file'
         env:
           # FILE_PATH: 'all_commits/${{ inputs.commit }}/.finished'
@@ -194,11 +206,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
         working-directory: .github/workflows/utils
-        run: |
-          # TODO remove
-          aws s3 rm $DESTINATION_TARGET_PATH --recursive
-
-          sh checkFinishedMarker.sh
+        run: sh checkFinishedMarker.sh
 
       - name: 'S3: Check if artifacts were already built and uploaded before via `.finished` file'
         env:
@@ -284,7 +292,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
-        run: sh .github/workflows/utils/uploadAndVerify.sh engines-artifacts-from-r2
+        run: sh .github/workflows/utils/uploadAndVerify.sh engines-artifacts-for-r2
 
       # TODO uncomment
       # This fails with permission denied at the moment
@@ -293,7 +301,7 @@ jobs:
       #     AWS_DEFAULT_REGION: 'eu-west-1'
       #     AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #   run: sh .github/workflows/utils/uploadAndVerify.sh engines-artifacts-from-s3
+      #   run: sh .github/workflows/utils/uploadAndVerify.sh engines-artifacts-for-s3
 
       - name: Cleanup local directories
-        run: rm -rf engines-artifacts engines-artifacts-from-r2 engines-artifacts-from-s3
+        run: rm -rf engines-artifacts engines-artifacts-for-r2 engines-artifacts-for-s3

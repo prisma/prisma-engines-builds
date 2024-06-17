@@ -2,8 +2,8 @@
 
 set -eux;
 
-# engines-artifacts-from-r2
-# engines-artifacts-from-s3
+# engines-artifacts-for-r2
+# engines-artifacts-for-s3
 LOCAL_DIR_PATH=$1
 
 if [ -z "$LOCAL_DIR_PATH" ]; then
@@ -107,7 +107,8 @@ fi
 FILES_TO_VALIDATE_WITH_LDD=$(find . -type f | grep -E "./(rhel|debian)-openssl-(3.0|1.1).*(query-engine|schema-engine|libquery_engine.so.node)$")
 echo "FILES_TO_VALIDATE_WITH_LDD: $FILES_TO_VALIDATE_WITH_LDD"
 
-echo $FILES_TO_VALIDATE_WITH_LDD | while read filename; do
+for filename in $FILES_TO_VALIDATE_WITH_LDD  
+do  
     GREP_OUTPUT=$(ldd "$filename"| grep "libssl")
     echo "GREP_OUTPUT: $GREP_OUTPUT"
     OUTPUT=$(echo "$GREP_OUTPUT" | cut -f2 | cut -d'.' -f1) 
