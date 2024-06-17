@@ -11,7 +11,7 @@ if [ -z "$LOCAL_DIR_PATH" ]; then
     exit 1
 fi
 
-echo "Upload to R2"
+echo "Uploading files..."
 cd engines-artifacts
 aws s3 sync . $DESTINATION_TARGET_PATH --no-progress \
     --exclude "*" \
@@ -99,12 +99,12 @@ find . -type f -name "*.sig" | while read filename; do
 done
 
 echo "Validating OpenSSL linking."
-if [[ "$OSTYPE" == "darwin"* ]]; then
+if [[ "$(uname)" == 'Darwin' ]]; then
     echo "::error::Mac OS does not have ldd command."
     exit 1
 fi
 
-FILES_TO_VALIDATE_WITH_LDD=$(find . -type f | grep -E "./rhel-openssl-(3.0|1.1).*(query-engine|schema-engine|libquery_engine.so.node)$")
+FILES_TO_VALIDATE_WITH_LDD=$(find . -type f | grep -E "./(rhel|debian)-openssl-(3.0|1.1).*(query-engine|schema-engine|libquery_engine.so.node)$")
 echo "FILES_TO_VALIDATE_WITH_LDD: $FILES_TO_VALIDATE_WITH_LDD"
 
 echo $FILES_TO_VALIDATE_WITH_LDD | while read filename; do
