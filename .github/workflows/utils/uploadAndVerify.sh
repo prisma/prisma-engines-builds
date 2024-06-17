@@ -98,6 +98,29 @@ find . -type f -name "*.sig" | while read filename; do
     gpg --verify "$filename" "$fileToVerify"
 done
 
+echo "Validating OpenSSL linking."
+if [[ "$OSTYPE" == "darwin"* ]]; then
+    echo "::error::Mac OS does not have ldd command."
+    exit 1
+fi
+
+FILES_TO_VALIDATE_WITH_LDD=$(find . -type f | grep -E "./rhel-openssl-(3.0|1.1).*(query-engine|schema-engine|libquery_engine.so.node)$")
+echo "FILES_TO_VALIDATE_WITH_LDD: $FILES_TO_VALIDATE_WITH_LDD"
+
+echo $FILES_TO_VALIDATE_WITH_LDD | while read filename; do
+    GREP_OUTPUT=$(ldd "$filename"| grep "libssl")
+    echo "GREP_OUTPUT: $GREP_OUTPUT"
+    OUTPUT=$(echo "$GREP_OUTPUT" | cut -f2 | cut -d'.' -f1) 
+
+    if [[ "$OUTPUT" == "libssl" ]]; then
+        echo "$OUTPUT"
+        echo "Linux build linked correctly to libssl."
+    else
+        echo "Linux build linked incorrectly to libssl."
+        exit 1
+    fi
+done
+
 echo "Upload .finished marker file"
 touch .finished
 aws s3 cp .finished "$DESTINATION_TARGET_PATH/.finished"
