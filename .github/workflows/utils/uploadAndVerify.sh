@@ -109,14 +109,14 @@ echo "FILES_TO_VALIDATE_WITH_LDD: $FILES_TO_VALIDATE_WITH_LDD"
 
 for filename in $FILES_TO_VALIDATE_WITH_LDD  
 do  
-    GREP_OUTPUT=$(ldd "$filename"| grep "libssl")
-    echo "GREP_OUTPUT: $GREP_OUTPUT"
+    echo "Validating libssl linking for $filename."
+    GREP_OUTPUT=$(ldd "$filename" | grep "libssl")
     OUTPUT=$(echo "$GREP_OUTPUT" | cut -f2 | cut -d'.' -f1) 
 
     if [[ "$OUTPUT" == "libssl" ]]; then
-        echo "$OUTPUT"
         echo "Linux build linked correctly to libssl."
     else
+        echo "GREP_OUTPUT: $GREP_OUTPUT"
         echo "Linux build linked incorrectly to libssl."
         exit 1
     fi

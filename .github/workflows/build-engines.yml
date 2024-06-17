@@ -206,7 +206,7 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
         working-directory: .github/workflows/utils
-        run: sh checkFinishedMarker.sh
+        run: bash checkFinishedMarker.sh
 
       - name: 'S3: Check if artifacts were already built and uploaded before via `.finished` file'
         env:
@@ -216,7 +216,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
         working-directory: .github/workflows/utils
-        run: sh checkFinishedMarker.sh
+        run: bash checkFinishedMarker.sh
 
       - name: Display structure of downloaded files
         run: ls -Rl engines-artifacts
@@ -292,7 +292,7 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ vars.R2_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.R2_SECRET_ACCESS_KEY }}
           AWS_ENDPOINT_URL_S3: ${{ vars.R2_ENDPOINT }}
-        run: sh .github/workflows/utils/uploadAndVerify.sh engines-artifacts-for-r2
+        run: bash .github/workflows/utils/uploadAndVerify.sh engines-artifacts-for-r2
 
       # TODO uncomment
       # This fails with permission denied at the moment
@@ -301,7 +301,7 @@ jobs:
       #     AWS_DEFAULT_REGION: 'eu-west-1'
       #     AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
       #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #   run: sh .github/workflows/utils/uploadAndVerify.sh engines-artifacts-for-s3
+      #   run: bash .github/workflows/utils/uploadAndVerify.sh engines-artifacts-for-s3
 
       - name: Cleanup local directories
         run: rm -rf engines-artifacts engines-artifacts-for-r2 engines-artifacts-for-s3
