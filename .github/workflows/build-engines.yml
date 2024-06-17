@@ -291,7 +291,6 @@ jobs:
           AWS_DEFAULT_REGION: 'eu-west-1'
           AWS_ACCESS_KEY_ID: ${{ vars.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        working-directory: .github/workflows/utils
         run: sh .github/workflows/utils/uploadAndVerify.sh engines-artifacts-from-s3
 
       - name: Cleanup local directories
