@@ -1,3 +1,4 @@
+.
 ./darwin
 ./darwin-arm64
 ./darwin-arm64/libquery_engine.dylib.node.gz
